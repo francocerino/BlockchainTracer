@@ -1,9 +1,3 @@
-# Ver:
-#  - reproducibility score
-# opcion: se comparte un diccionario con  el cual se evalua en la blockchain si tiene la metadata correcta, para luego usarla
-# de todas formas se [podria guardar el diccionario en la blockchain, y solo compartir un hash para buscar el diccionario
-
-
 import os
 import json
 import hashlib
@@ -11,6 +5,41 @@ import time
 from typing import Any, Dict, Optional
 from web3 import Web3
 from eth_account.messages import encode_defunct
+
+# Ver:
+#  - reproducibility score
+# opcion: se comparte un diccionario con  el cual se evalua en la blockchain si tiene 
+# la metadata correcta, para luego usarla.
+# de todas formas se [podria guardar el diccionario en la blockchain, 
+# y solo compartir un hash para buscar el diccionario
+
+
+
+# escribo en blockchain. mando. tendo hash.
+# otro dia hago lo mismo. tengo otro hash.
+# guardar en cada tx el hash de la tx anterior para seguir linea temporal.
+# puede quedar automatizado por dentro, sin que el usuario que usa el paquete lo vea.
+# a todo esto se puede hacer un getter que lea todas las tx y las imprima, para visualizar todo lo guardado
+# a lo largo del tiempo
+
+# como saber cual es la secuencia de escritura de un estudio? por los hashes y que siempre a las tx las haga el mismo address.
+# en versiones futuras se puede ver que la escritura este permitida a varias personas, pero no es tema de ahora.
+
+# si se quiere dar un unico hash, se puede utilizar el hash de la ultima tx.
+# luego con operaciones de lectura a la blockchain se puede ver todo el historial de txs de un experimento.
+
+
+# creo que esto ultimo responde esto:
+# un hash final obtenido de todos los datos?
+# linkear pasos secuenciales con hashes?
+
+
+# se pueden subir hashes de cualquier dato. imagenes, datasets, etc. si uno los almacena offchain, luego es cuestion de hashearlos para verificar
+#  que el hash guardado es el relacionado con estos datos.
+
+# datos que no se quieran publicos, se puede guardar solo el hash en blockchain, aunque no garantiza la persistencia.
+# se puede ver que hay hoy en dia en el ecosistema para resolver esto.
+
 
 
 class BlockchainTracer:
@@ -240,28 +269,3 @@ class BlockchainTracer:
 
         return record
 
-
-# escribo en blockchain. mando. tendo hash.
-# otro dia hago lo mismo. tengo otro hash.
-# guardar en cada tx el hash de la tx anterior para seguir linea temporal.
-# puede quedar automatizado por dentro, sin que el usuario que usa el paquete lo vea.
-# a todo esto se puede hacer un getter que lea todas las tx y las imprima, para visualizar todo lo guardado
-# a lo largo del tiempo
-
-# como saber cual es la secuencia de escritura de un estudio? por los hashes y que siempre a las tx las haga el mismo address.
-# en versiones futuras se puede ver que la escritura este permitida a varias personas, pero no es tema de ahora.
-
-# si se quiere dar un unico hash, se puede utilizar el hash de la ultima tx.
-# luego con operaciones de lectura a la blockchain se puede ver todo el historial de txs de un experimento.
-
-
-# creo que esto ultimo responde esto:
-# un hash final obtenido de todos los datos?
-# linkear pasos secuenciales con hashes?
-
-
-# se pueden subir hashes de cualquier dato. imagenes, datasets, etc. si uno los almacena offchain, luego es cuestion de hashearlos para verificar
-#  que el hash guardado es el relacionado con estos datos.
-
-# datos que no se quieran publicos, se puede guardar solo el hash en blockchain, aunque no garantiza la persistencia.
-# se puede ver que hay hoy en dia en el ecosistema para resolver esto.
