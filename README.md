@@ -16,7 +16,7 @@ A single Python class multipurpose.
  - Trace NGO donations.
  - Improve supply chain traceability.
  - Save important data of scientific studies.
- - Text!
+ - Write any text in blockchain.
  - What you want.
 
 ## Roadmap
