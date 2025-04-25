@@ -12,24 +12,22 @@ A single Python class multipurpose.
 ## Multipurpose
 
  - Upload hashes of big data files. 
- - Improve reproducibility of Machine Learning models. There is a 'Reproducibility Crysis'.
+ - Improve reproducibility of Machine Learning models. There is a 'reproducibility crysis'.
  - Trace NGO donations.
  - Improve supply chain traceability.
  - Save important data of scientific studies.
- - Write any text in blockchain.
+ - Any text.
  - What you want.
 
 ## Roadmap
 
- - afinar en caso de ML. Requerimientos para buena reproducibilidad.
- - que ande bien el codigo. facil para el usuario.
- - codigo en python para facilitar a gente tecnica, no en blockchain necesariamente.
- - integracion con una blockchain evm.
- - integracion con IPFS para datos grandes.
- - extender a otras blockchains.
- - extender a blockchains privadas.
- - frontend para masividad.
- - code in smart contract to enhance descentralization of the code used.
- - option to create and write with a new address.
- 
-
+ - Fine-tune the case of ML. Requirements for good reproducibility.
+ - Ensure the code works well. Easy for the user.
+ - Python code to facilitate technical people, not necessarily in blockchain.
+ - Integration with an EVM blockchain.
+ - Integration with IPFS for large data.
+ - Extend to other blockchains.
+ - Extend to private blockchains.
+ - Frontend for scalability.
+ - Code in smart contract to enhance decentralization of the code used.
+ - Option to create and write with a new address.
