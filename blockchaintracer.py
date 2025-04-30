@@ -33,6 +33,7 @@ from eth_account.messages import encode_defunct
 # un hash final obtenido de todos los datos?
 # linkear pasos secuenciales con hashes?
 
+# el usuario que escribe en blockchain debe dar una lista de hashes? o hacer todo invocando una unica vez al metodo 'trace'?
 
 # se pueden subir hashes de cualquier dato. imagenes, datasets, etc. si uno los almacena offchain, luego es cuestion de hashearlos para verificar
 #  que el hash guardado es el relacionado con estos datos.
@@ -40,6 +41,10 @@ from eth_account.messages import encode_defunct
 # datos que no se quieran publicos, se puede guardar solo el hash en blockchain, aunque no garantiza la persistencia.
 # se puede ver que hay hoy en dia en el ecosistema para resolver esto.
 
+#que agregar para rep de ML.
+# ver standard ONNX
+# hash del codigo
+# IPFS
 
 
 class BlockchainTracer:
@@ -176,8 +181,6 @@ class BlockchainTracer:
             "transaction_hash": tx_hash.hex(),
             "block_number": tx_receipt.blockNumber,
         }
-
-    # el usuario que escribe en blockchain debe dar una lista de hashes? o hacer todo invocando una unica vez al metodo 'trace'?
 
     def verify_data(
         self, original_data: Any, blockchain_record: Dict[str, Any]

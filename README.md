@@ -21,13 +21,18 @@ A single Python class multipurpose.
 
 ## Roadmap
 
+prioritize:
+ - Read saved and related bibliography to clarify the needed things for ML reproducibility.
  - Fine-tune the case of ML. Requirements for good reproducibility.
+ - Give the user things needed for reproducibility the model.
  - Ensure the code works well. Easy for the user.
  - Python code to facilitate technical people, not necessarily in blockchain.
+ - Code and binaries. What to do?
  - Integration with an EVM blockchain.
  - Integration with IPFS for large data.
  - Extend to other blockchains.
  - Extend to private blockchains.
- - Frontend for scalability.
- - Code in smart contract to enhance decentralization of the code used.
- - Option to create and write with a new address.
+ - Frontend for scalability (usable by non-technical persons).
+ - Smart contract to decentralice the code used.
+ - Display option to create and write with a new address.
+
