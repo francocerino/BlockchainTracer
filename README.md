@@ -30,6 +30,14 @@ A single Python class multipurpose.
     - [ref 3](https://sol.sbc.org.br/index.php/bresci/article/view/10033/9915)
     - [ref 4](https://arxiv.org/pdf/2206.10110)
     - [ref 5](https://sci-hub.se/10.1109/BigData.2018.8622237)
+    - [Improving Reproducibility in Machine Learning Research (2021)](https://www.jmlr.org/papers/volume22/20-303/20-303.pdf)
+    - [Reproducibility in Machine Learning-Driven Research (2023)](https://arxiv.org/pdf/2307.10320)
+    - [Leakage and the reproducibility crisis in machine learning-based science (2023)](https://www.cell.com/patterns/pdf/S2666-3899(23)00159-9.pdf)
+    - [reforms: Reporting Standards for Machine Learning Based Science (2023)](https://arxiv.org/pdf/2308.07832)
+    - [Traceability for Trustworthy AI: A Review of Models and Tools (2021)](https://www.mdpi.com/2504-2289/5/2/20)
+    - [Reproducibility in PyTorch](https://pytorch.org/docs/stable/notes/randomness.html)
+    - [Advancing Research Reproducibility in Machine Learning through Blockchain Technology (2024)](https://content.iospress.com/download/informatica/infor553?id=informatica%2Finfor553)
+
 
 
  2. Fine-tune the case of ML. Requirements for good reproducibility.
