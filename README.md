@@ -23,32 +23,22 @@ A single Python class multipurpose.
 
 ### Stage 1
 
- 1 - Read saved and related bibliography to clarify the needed things for ML reproducibility.
- 
- 2 - Fine-tune the case of ML. Requirements for good reproducibility.
- 
- 3 - Give the user things needed for reproducibility the model.
- 
- 4 - Ensure the code is easy to use and works well. 
- 
-        - Python code to facilitate technical people, not necessarily in blockchain.
- 
-        - Integration with EVM blockchains (the most used).
+ 1. Read saved and related bibliography to clarify the needed things for ML reproducibility.
+ 2. Fine-tune the case of ML. Requirements for good reproducibility.
+ 3. Give the user things needed for reproducibility the model.
+ 4. Ensure the code is easy to use and works well. 
+    - Python code to facilitate technical people, not necessarily in blockchain.
+    - Integration with EVM blockchains (the most used).
 
 ### Stage 2
 
- 5 - Solve what to do with code and binaries.
-
- 6 - Integration with IPFS for large data.
+ 5. Solve what to do with code and binaries.
+ 6. Integration with IPFS for large data.
  
  ### Stage 3
 
- 7 - Frontend for scalability (usable by non-technical persons).
-
- 8 - Smart contract to decentralice the code used.
- 
- 9 - Extend to other public blockchains.
- 
- 10 - Extend to private blockchains.
- 
- 11 - Display option to trace data with a new address.
+ 7. Frontend for scalability (usable by non-technical persons).
+ 8. Smart contract to decentralice the code used.
+ 9. Extend to other public blockchains.
+ 10. Extend to private blockchains. 
+ 11. Display option to trace data with a new address.
