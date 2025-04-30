@@ -11,8 +11,8 @@ A single Python class multipurpose.
 
 ## Multipurpose
 
+ - Improve reproducibility of Machine Learning models. There is a 'reproducibility crysis'. (THIS IS THE MAIN IDEA)
  - Upload hashes of big data files. 
- - Improve reproducibility of Machine Learning models. There is a 'reproducibility crysis'.
  - Trace NGO donations.
  - Improve supply chain traceability.
  - Save important data of scientific studies.
