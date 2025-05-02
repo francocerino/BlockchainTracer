@@ -44,7 +44,7 @@ A single Python class multipurpose.
  3. Give the user things needed for reproducibility the model.
  4. Ensure the code is easy to use and works well. 
     - Python code to facilitate technical people, not necessarily in blockchain.
-    - Integration with EVM blockchains (the most used).
+    - Integration with EVM blockchains (the most used and highly decentralized).
 
 ### Stage 2
 
