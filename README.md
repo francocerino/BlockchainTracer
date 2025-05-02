@@ -46,6 +46,7 @@ A single multipurpose Python class.
     - Important: The NeurIPS 2019 ML reproducibility checklist ([Improving Reproducibility in Machine Learning Research](https://www.jmlr.org/papers/volume22/20-303/20-303.pdf)).
     - JSON data structure with every configuration of the ML pipeline (hardware, environment, preprocesses, hyperparameters, seeds, metrics, package versions, etc).
     - Model info sheet of [Leakage and the reproducibility crisis in machine learning-based science (2023)](https://www.cell.com/patterns/pdf/S2666-3899(23)00159-9.pdf)
+    - Standarized enviroment. Docker is always needed? [Leakage and the reproducibility crisis in machine learning-based science (2023)](https://www.cell.com/patterns/pdf/S2666-3899(23)00159-9.pdf)
  3. Give the user things needed for reproducibility the model.
  4. Ensure the code is easy to use and works well. 
     - Python code to facilitate technical people, not necessarily in blockchain.
