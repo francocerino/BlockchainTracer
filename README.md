@@ -31,7 +31,7 @@ A single Python class multipurpose.
     - [Towards Enabling Trusted Artificial Intelligence via Blockchain](https://www.researchgate.net/publication/332642472_Towards_Enabling_Trusted_Artificial_Intelligence_via_Blockchain)
     - [BlockFlow: Trust in Scientific Provenance Data](https://sol.sbc.org.br/index.php/bresci/article/view/10033/9915)
     - [ProML: A Decentralised Platform for Provenance Management of Machine Learning Software Systems](https://arxiv.org/pdf/2206.10110)
-    - [ - Proof of authorship. Trace results with an address and a timestamp](https://sci-hub.se/10.1109/BigData.2018.8622237)
+    - [Blockchain Based Provenance Sharing of Scientific Workflows](https://sci-hub.se/10.1109/BigData.2018.8622237)
     - [Improving Reproducibility in Machine Learning Research (2021)](https://www.jmlr.org/papers/volume22/20-303/20-303.pdf)
     - [Reproducibility in Machine Learning-Driven Research (2023)](https://arxiv.org/pdf/2307.10320)
     - [Leakage and the reproducibility crisis in machine learning-based science (2023)](https://www.cell.com/patterns/pdf/S2666-3899(23)00159-9.pdf)
