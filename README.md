@@ -43,6 +43,7 @@ A single multipurpose Python class.
 
 
  2. Fine-tune the case of ML. Requirements for good reproducibility.
+    - Important: The NeurIPS 2019 ML reproducibility checklist ([Improving Reproducibility in Machine Learning Research](https://www.jmlr.org/papers/volume22/20-303/20-303.pdf)).
  3. Give the user things needed for reproducibility the model.
  4. Ensure the code is easy to use and works well. 
     - Python code to facilitate technical people, not necessarily in blockchain.
