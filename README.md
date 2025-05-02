@@ -7,7 +7,7 @@ Save sequential steps of anything.
 
 ## Implementation
 
-A single Python class multipurpose.
+A single multipurpose Python class.
 
 ## Multipurpose
 
