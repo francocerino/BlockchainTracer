@@ -27,6 +27,7 @@ A single Python class multipurpose.
 
     - [A Survey of Data Provenance in e-Science](https://sci-hub.se/10.1145/1084805.1084812)
     - [Ensuring Trustworthy Neural Network Training via Blockchain](https://par.nsf.gov/servlets/purl/10464202)
+    - [Towards Enabling Trusted Artificial Intelligence via Blockchain](https://www.researchgate.net/publication/332642472_Towards_Enabling_Trusted_Artificial_Intelligence_via_Blockchain)
     - [ref 3](https://sol.sbc.org.br/index.php/bresci/article/view/10033/9915)
     - [ref 4](https://arxiv.org/pdf/2206.10110)
     - [ref 5](https://sci-hub.se/10.1109/BigData.2018.8622237)
