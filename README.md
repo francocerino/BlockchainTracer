@@ -5,7 +5,7 @@ Blockchain is inmutable, transparent, full availability, traceable.
 
 Save sequential steps of anything.
 
-## Implentation
+## Implementation
 
 A single Python class multipurpose.
 
