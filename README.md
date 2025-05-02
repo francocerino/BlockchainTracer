@@ -16,6 +16,7 @@ A single Python class multipurpose.
  - Trace NGO donations.
  - Improve supply chain traceability.
  - Save important data of scientific studies.
+ - Proof of authorship. Trace results with an address and a timestamp.
  - Any text.
  - What you want.
 
