@@ -1,7 +1,7 @@
 # BlockchainTracer
-Python package to trace sensible information and processes in blockchain.
+Python package to trace sensitive information and process flows on the blockchain.
 
-Blockchain is inmutable, transparent, full availability, traceable.
+Leverages the blockchain’s inherent properties —immutability, transparency, availability, and traceability— to record and audit sequential steps in any process. Ideal for applications requiring verifiable records of actions or sensitive data trails.
 
 Save sequential steps of anything.
 
