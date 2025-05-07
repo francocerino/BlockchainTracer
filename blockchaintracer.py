@@ -13,7 +13,7 @@ from eth_account.messages import encode_defunct
 # de todas formas se [podria guardar el diccionario en la blockchain, 
 # y solo compartir un hash para buscar el diccionario
 
-
+# each affirmation done by computation must have available code that justifies.
 
 # escribo en blockchain. mando. tendo hash.
 # otro dia hago lo mismo. tengo otro hash.
@@ -42,9 +42,10 @@ from eth_account.messages import encode_defunct
 # se puede ver que hay hoy en dia en el ecosistema para resolver esto.
 
 #que agregar para rep de ML.
-# ver standard ONNX
+# ver standard ONNX. guardar hash de ONNX
 # hash del codigo
 # IPFS
+# mostrarle al usuario que tiene que guardar para pasarle la data a un 3ro y que lo pueda reproducir
 
 
 class BlockchainTracer:
