@@ -38,7 +38,7 @@ A single multipurpose Python class.
     - [reforms: Reporting Standards for Machine Learning Based Science (2023)](https://arxiv.org/pdf/2308.07832)
     - [Traceability for Trustworthy AI: A Review of Models and Tools (2021)](https://www.mdpi.com/2504-2289/5/2/20)
     - [Reproducibility in PyTorch](https://pytorch.org/docs/stable/notes/randomness.html)
-    - [Advancing Research Reproducibility in Machine Learning through Blockchain Technology (2024)](https://content.iospress.com/download/informatica/infor553?id=informatica%2Finfor553)
+    - [Advancing Research Reproducibility in Machine Learning through Blockchain Technology (2024)](https://informatica.vu.lt/journal/INFORMATICA/article/1330/info)
 
 
 
