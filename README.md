@@ -56,7 +56,7 @@ A single multipurpose Python class.
 ### Stage 2
 
  5. Solve what to do with code and binaries.
- 6. Integration with IPFS for large data.
+ 6. Integration with IPFS (or arweave?) for large data.
  
  ### Stage 3
 
