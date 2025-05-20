@@ -40,7 +40,7 @@ A single multipurpose Python class.
     - [Reproducibility in PyTorch](https://pytorch.org/docs/stable/notes/randomness.html)
     - [Advancing Research Reproducibility in Machine Learning through Blockchain Technology (2024)](https://informatica.vu.lt/journal/INFORMATICA/article/1330/info)
 
-
+[Continue list, reading remaining items from 1.]
 
  2. Fine-tune the case of ML. Requirements for good reproducibility.
     - The NeurIPS 2019 ML reproducibility checklist ([Improving Reproducibility in Machine Learning Research](https://www.jmlr.org/papers/volume22/20-303/20-303.pdf)).
