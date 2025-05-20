@@ -39,17 +39,18 @@ A single multipurpose Python class.
     - [Traceability for Trustworthy AI: A Review of Models and Tools (2021)](https://www.mdpi.com/2504-2289/5/2/20)
     - [Reproducibility in PyTorch](https://pytorch.org/docs/stable/notes/randomness.html)
     - [Advancing Research Reproducibility in Machine Learning through Blockchain Technology (2024)](https://informatica.vu.lt/journal/INFORMATICA/article/1330/info)
+    - [Promoting Distributed Trust in Machine Learning and Computational Simulation via a Blockchain Network](https://arxiv.org/pdf/1810.11126)
 
 [Continue list, reading remaining items from 1.]
 
- 2. Fine-tune the case of ML. Requirements for good reproducibility.
+ 3. Fine-tune the case of ML. Requirements for good reproducibility.
     - The NeurIPS 2019 ML reproducibility checklist ([Improving Reproducibility in Machine Learning Research](https://www.jmlr.org/papers/volume22/20-303/20-303.pdf)).
     - JSON data structure with every configuration of the ML pipeline (hardware, environment, preprocesses, hyperparameters, seeds, metrics, package versions, etc). Also HDF5? [Traceability for Trustworthy AI: A Review of Models and Tools (2021)](https://www.mdpi.com/2504-2289/5/2/20)
     - Model info sheet of [Leakage and the reproducibility crisis in machine learning-based science (2023)](https://www.cell.com/patterns/pdf/S2666-3899(23)00159-9.pdf)
     - Standarized enviroment. Docker is always needed? [Leakage and the reproducibility crisis in machine learning-based science (2023)](https://www.cell.com/patterns/pdf/S2666-3899(23)00159-9.pdf)
     - Checklist of [reforms: Reporting Standards for Machine Learning Based Science (2023)](https://arxiv.org/pdf/2308.07832).
- 3. Give the user things needed for reproducibility the model.
- 4. Ensure the code is easy to use and works well. 
+ 4. Give the user things needed for reproducibility the model.
+ 5. Ensure the code is easy to use and works well. 
     - Python code to facilitate technical people, not necessarily in blockchain.
     - Integration with EVM blockchains (the most used and highly decentralized).
 
