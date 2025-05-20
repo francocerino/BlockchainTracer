@@ -40,6 +40,7 @@ A single multipurpose Python class.
     - [Reproducibility in PyTorch](https://pytorch.org/docs/stable/notes/randomness.html)
     - [Advancing Research Reproducibility in Machine Learning through Blockchain Technology (2024)](https://informatica.vu.lt/journal/INFORMATICA/article/1330/info)
     - [Promoting Distributed Trust in Machine Learning and Computational Simulation via a Blockchain Network](https://arxiv.org/pdf/1810.11126)
+    - [BC analytics and IA](https://www.researchgate.net/profile/Qi-Zhang-126/publication/331241223_Blockchain_Analytics_and_Artificial_Intelligence/links/5c79ee12299bf1268d30af9e/Blockchain-Analytics-and-Artificial-Intelligence.pdf)
 
 [Continue list, reading remaining items from 1.]
 
