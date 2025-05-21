@@ -36,9 +36,9 @@ A single multipurpose Python class.
     - [Reproducibility in Machine Learning-Driven Research (2023)](https://arxiv.org/pdf/2307.10320)
     - [Leakage and the reproducibility crisis in machine learning-based science (2023)](https://www.cell.com/patterns/pdf/S2666-3899(23)00159-9.pdf)
     - [reforms: Reporting Standards for Machine Learning Based Science (2023)](https://arxiv.org/pdf/2308.07832)
-    - [Traceability for Trustworthy AI: A Review of Models and Tools (2021)](https://www.mdpi.com/2504-2289/5/2/20). Comparison of some existing frameworks.
+    - [Traceability for Trustworthy AI: A Review of Models and Tools (2021)](https://www.mdpi.com/2504-2289/5/2/20). Comparison of some existing frameworks for ML reproducibility.
     - [Reproducibility in PyTorch](https://pytorch.org/docs/stable/notes/randomness.html)
-    - [Advancing Research Reproducibility in Machine Learning through Blockchain Technology (2024)](https://informatica.vu.lt/journal/INFORMATICA/article/1330/info)
+    - [Advancing Research Reproducibility in Machine Learning through Blockchain Technology (2024)](https://informatica.vu.lt/journal/INFORMATICA/article/1330/info). Shows a review of works related to ML reproducibility with Blockchain.
     - [Promoting Distributed Trust in Machine Learning and Computational Simulation via a Blockchain Network](https://arxiv.org/pdf/1810.11126)
     - [Blockchain analytics and Artificial Intelligence](https://www.researchgate.net/profile/Qi-Zhang-126/publication/331241223_Blockchain_Analytics_and_Artificial_Intelligence/links/5c79ee12299bf1268d30af9e/Blockchain-Analytics-and-Artificial-Intelligence.pdf)
 
