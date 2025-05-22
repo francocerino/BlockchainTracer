@@ -43,6 +43,8 @@ A single multipurpose Python class.
     - [Blockchain analytics and Artificial Intelligence](https://www.researchgate.net/profile/Qi-Zhang-126/publication/331241223_Blockchain_Analytics_and_Artificial_Intelligence/links/5c79ee12299bf1268d30af9e/Blockchain-Analytics-and-Artificial-Intelligence.pdf)
     - [Automatically Tracking Metadata and
 Provenance of Machine Learning Experiments](https://assets.amazon.science/2f/39/4b32cf354e4c993b439d88258597/automatically-tracking-metadata-and-provenance-of-machine-learning-experiments.pdf) Comments an approach for scikit-learn Pipelines and other libraries.
+    - [Reproducibility in Machine Learning-based Research: Overview, Barriers and Drivers (2024)](https://arxiv.org/html/2406.14325v1) 
+
 
  2. Fine-tune the case of ML. Requirements for good reproducibility.
     - The NeurIPS 2019 ML reproducibility checklist ([Improving Reproducibility in Machine Learning Research](https://www.jmlr.org/papers/volume22/20-303/20-303.pdf)).
