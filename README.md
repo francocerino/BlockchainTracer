@@ -48,7 +48,7 @@ Provenance of Machine Learning Experiments](https://assets.amazon.science/2f/39/
  2. **Specifying differentiators of this work**.
      A solution that has simultaneously:
     - Traceability of ML models in EVM Blockchains with a Python API. Python is the most used language in ML, and EVM the most used for smart contracts.
-    - Open source.
+    - Open source code.
     - Following standards of previous studies for ML reproducibility. Is a good idea more focus on narrative for reproducibility?
     - Ability to trace other processes in general. But focused in ML reproducibility.
     - Trace computer environment where the ML model was trained.
