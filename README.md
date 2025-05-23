@@ -45,7 +45,17 @@ A single multipurpose Python class.
 Provenance of Machine Learning Experiments](https://assets.amazon.science/2f/39/4b32cf354e4c993b439d88258597/automatically-tracking-metadata-and-provenance-of-machine-learning-experiments.pdf) Comments an approach for scikit-learn Pipelines and other libraries.
     - [Reproducibility in Machine Learning-based Research: Overview, Barriers and Drivers (2024)](https://arxiv.org/html/2406.14325v1) 
 
+ 1a. Differentiators.
 
+A solution that has simultaneously:
+
+    - Trace with a Python API ML models in EVM Blockchains. Python the most used language in ML, and EVM the most used for smart contracts.
+    - Open source
+    - Following standards of previous studies for ML reproducibility. Focus on narrative?
+    - Trace processes in general. But focused in ML reproducibility.
+    - Trace computer environment where model was trained.
+    - Use Arweave or IPFS for large data, storing its hash in the EVM blockchain.
+ 
  2. Fine-tune the case of ML. Requirements for good reproducibility.
     - The NeurIPS 2019 ML reproducibility checklist ([Improving Reproducibility in Machine Learning Research](https://www.jmlr.org/papers/volume22/20-303/20-303.pdf)).
     - JSON data structure with every configuration of the ML pipeline (hardware, environment, preprocesses, hyperparameters, seeds, metrics, package versions, etc). Also HDF5? [Traceability for Trustworthy AI: A Review of Models and Tools (2021)](https://www.mdpi.com/2504-2289/5/2/20)
