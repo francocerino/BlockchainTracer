@@ -49,12 +49,12 @@ Provenance of Machine Learning Experiments](https://assets.amazon.science/2f/39/
 
 A solution that has simultaneously:
 
-    - Trace with a Python API ML models in EVM Blockchains. Python the most used language in ML, and EVM the most used for smart contracts.
-    - Open source
-    - Following standards of previous studies for ML reproducibility. Focus on narrative?
-    - Trace processes in general. But focused in ML reproducibility.
-    - Trace computer environment where model was trained.
-    - Use Arweave or IPFS for large data, storing its hash in the EVM blockchain.
+   - Trace with a Python API ML models in EVM Blockchains. Python the most used language in ML, and EVM the most used for smart contracts.
+   - Open source
+   - Following standards of previous studies for ML reproducibility. Focus on narrative?
+   - Trace processes in general. But focused in ML reproducibility.
+   - Trace computer environment where model was trained.
+   - Use Arweave or IPFS for large data, storing its hash in the EVM blockchain.
  
  2. Fine-tune the case of ML. Requirements for good reproducibility.
     - The NeurIPS 2019 ML reproducibility checklist ([Improving Reproducibility in Machine Learning Research](https://www.jmlr.org/papers/volume22/20-303/20-303.pdf)).
