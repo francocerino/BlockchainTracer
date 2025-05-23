@@ -72,7 +72,7 @@ Provenance of Machine Learning Experiments](https://assets.amazon.science/2f/39/
 ### Stage 2
 
  6. Solve what to do with code and binaries.
- 7. Integration with IPFS (or arweave?) for large data.
+ 7. Integration with IPFS or Arweave for large data.
  
  ### Stage 3
 
