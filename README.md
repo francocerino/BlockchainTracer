@@ -64,7 +64,7 @@ Provenance of Machine Learning Experiments](https://assets.amazon.science/2f/39/
       
       [Continue list, reading remaining items from 1.]
 
- 5. Give the user things needed for reproducibility the model.
+ 5. Give the user things needed to reproduce models.
  6. Ensure the code is easy to use and works well. 
     - Python code to facilitate technical people, not necessarily in blockchain.
     - Integration with EVM blockchains (the most used and highly decentralized).
