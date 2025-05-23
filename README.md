@@ -45,7 +45,7 @@ A single multipurpose Python class.
 Provenance of Machine Learning Experiments](https://assets.amazon.science/2f/39/4b32cf354e4c993b439d88258597/automatically-tracking-metadata-and-provenance-of-machine-learning-experiments.pdf) Comments an approach for scikit-learn Pipelines and other libraries.
     - [Reproducibility in Machine Learning-based Research: Overview, Barriers and Drivers (2024)](https://arxiv.org/html/2406.14325v1) 
 
-  1a. **Specifying Differentiators of this work.**
+   1a. **Specifying differentiators of this work**
 
    A solution that has simultaneously:
    
