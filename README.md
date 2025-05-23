@@ -45,16 +45,17 @@ A single multipurpose Python class.
 Provenance of Machine Learning Experiments](https://assets.amazon.science/2f/39/4b32cf354e4c993b439d88258597/automatically-tracking-metadata-and-provenance-of-machine-learning-experiments.pdf) Comments an approach for scikit-learn Pipelines and other libraries.
     - [Reproducibility in Machine Learning-based Research: Overview, Barriers and Drivers (2024)](https://arxiv.org/html/2406.14325v1) 
 
- 2. **Specifying differentiators of this work**. A solution that has simultaneously:
-   
-   - Traceability of ML models in EVM Blockchains with a Python API. Python is the most used language in ML, and EVM the most used for smart contracts.
-   - Open source.
-   - Following standards of previous studies for ML reproducibility. Is a good idea more focus on narrative for reproducibility?
-   - Ability to trace other processes in general. But focused in ML reproducibility.
-   - Trace computer environment where the ML model was trained.
-   - Use Arweave or IPFS for large data, storing its hash in the EVM blockchain.
+ 2. **Specifying differentiators of this work**.
+
+    A solution that has simultaneously:
+    - Traceability of ML models in EVM Blockchains with a Python API. Python is the most used language in ML, and EVM the most used for smart contracts.
+    - Open source.
+    - Following standards of previous studies for ML reproducibility. Is a good idea more focus on narrative for reproducibility?
+    - Ability to trace other processes in general. But focused in ML reproducibility.
+    - Trace computer environment where the ML model was trained.
+    - Use Arweave or IPFS for large data, storing its hash in the EVM blockchain.
   
- 3. Fine-tune the case of ML. Requirements for good reproducibility.
+ 4. Fine-tune the case of ML. Requirements for good reproducibility.
     - The NeurIPS 2019 ML reproducibility checklist ([Improving Reproducibility in Machine Learning Research](https://www.jmlr.org/papers/volume22/20-303/20-303.pdf)).
     - JSON data structure with every configuration of the ML pipeline (hardware, environment, preprocesses, hyperparameters, seeds, metrics, package versions, etc). Also HDF5? [Traceability for Trustworthy AI: A Review of Models and Tools (2021)](https://www.mdpi.com/2504-2289/5/2/20)
     - Model info sheet of [Leakage and the reproducibility crisis in machine learning-based science (2023)](https://www.cell.com/patterns/pdf/S2666-3899(23)00159-9.pdf)
@@ -64,8 +65,8 @@ Provenance of Machine Learning Experiments](https://assets.amazon.science/2f/39/
       
       [Continue list, reading remaining items from 1.]
 
- 4. Give the user things needed for reproducibility the model.
- 5. Ensure the code is easy to use and works well. 
+ 5. Give the user things needed for reproducibility the model.
+ 6. Ensure the code is easy to use and works well. 
     - Python code to facilitate technical people, not necessarily in blockchain.
     - Integration with EVM blockchains (the most used and highly decentralized).
 
