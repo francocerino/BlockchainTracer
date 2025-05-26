@@ -43,7 +43,8 @@ A single multipurpose Python class.
     - [Blockchain analytics and Artificial Intelligence](https://www.researchgate.net/profile/Qi-Zhang-126/publication/331241223_Blockchain_Analytics_and_Artificial_Intelligence/links/5c79ee12299bf1268d30af9e/Blockchain-Analytics-and-Artificial-Intelligence.pdf)
     - [Automatically Tracking Metadata and
 Provenance of Machine Learning Experiments](https://assets.amazon.science/2f/39/4b32cf354e4c993b439d88258597/automatically-tracking-metadata-and-provenance-of-machine-learning-experiments.pdf) Comments an approach for scikit-learn Pipelines and other libraries.
-    - [Reproducibility in Machine Learning-based Research: Overview, Barriers and Drivers (2024)](https://arxiv.org/html/2406.14325v1) 
+    - [Reproducibility in Machine Learning-based Research: Overview, Barriers and Drivers (2024)](https://arxiv.org/html/2406.14325v1)
+    - [Model Cards for Model Reporting](https://arxiv.org/pdf/1810.03993)
 
  2. **Specifying differentiators of this work**.
      A solution that has simultaneously:
@@ -61,6 +62,7 @@ Provenance of Machine Learning Experiments](https://assets.amazon.science/2f/39/
     - Standarized enviroment. Docker is always needed? [Leakage and the reproducibility crisis in machine learning-based science (2023)](https://www.cell.com/patterns/pdf/S2666-3899(23)00159-9.pdf)
     - Checklist of [reforms: Reporting Standards for Machine Learning Based Science (2023)](https://arxiv.org/pdf/2308.07832).
     - Minimal Description Profile: [Traceability for Trustworthy AI: A Review of Models and Tools (2021)](https://www.mdpi.com/2504-2289/5/2/20).
+    - [Model Cards for Model Reporting](https://arxiv.org/pdf/1810.03993)
       
       [Continue list, reading remaining items from 1.]
 
