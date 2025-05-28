@@ -68,6 +68,8 @@ Provenance of Machine Learning Experiments](https://assets.amazon.science/2f/39/
       
       [Continue list, reading remaining items from 1.]
 
+   I have different info sheets or model cards that are needed to fill. What to do, take all the things to trace and remove the repeated things? choose one of them in particular? choose related data to one of the subjects to trace? (for example, only model parameters or narrative). think in terms of set theory. Model cards and automl are tested and  used by the community, maybe i can step on these developments. also the code that i have to automatize that i have in notes.md is a good thing to take in account.
+
  5. Give the user things needed to reproduce models.
  6. Ensure the code is easy to use and works well. 
     - Python code to facilitate technical people, not necessarily in blockchain.
@@ -88,3 +90,4 @@ Provenance of Machine Learning Experiments](https://assets.amazon.science/2f/39/
  11. Extend to private blockchains. 
  12. Display option to trace data with a new address.
  13. Expand to more RPCs (besides Infura).
+ 14. Automate model info sheet completion. Use a LLM?

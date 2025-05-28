@@ -747,3 +747,223 @@ Benefits for BlockchainTracer:
 2. Standardized metadata format
 3. Comprehensive experiment context
 4. Automatic provenance tracking
+
+### Automated Model Documentation
+
+#### Consolidating Model Cards and Experiment Sheets
+
+Traditional documentation often requires maintaining multiple formats:
+- Model cards in Markdown/HTML
+- Experiment sheets in Excel/Google Sheets
+- README files
+- Performance reports
+- Deployment docs
+
+**Solution: Automated Documentation Generation**
+
+```python
+from blockchaintracer import MLTracer
+import mlflow
+from jinja2 import Template
+import pandas as pd
+
+class DocumentationTracer(MLTracer):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.doc_template = self._load_template()
+    
+    def _load_template(self):
+        return Template("""
+        # Model Card: {{ model_name }}
+        
+        ## Model Details
+        - Name: {{ model_name }}
+        - Type: {{ model_type }}
+        - Version: {{ version }}
+        - Date: {{ timestamp }}
+        
+        ## Training Data
+        - Dataset: {{ dataset_info.name }}
+        - Size: {{ dataset_info.size }}
+        - Features: {{ dataset_info.features }}
+        
+        ## Performance Metrics
+        {% for metric, value in metrics.items() %}
+        - {{ metric }}: {{ value }}
+        {% endfor %}
+        
+        ## Training Parameters
+        {% for param, value in parameters.items() %}
+        - {{ param }}: {{ value }}
+        {% endfor %}
+        
+        ## Environment
+        - Framework: {{ env.framework }}
+        - Dependencies: {{ env.dependencies }}
+        
+        ## Blockchain Verification
+        - Transaction Hash: {{ blockchain_info.tx_hash }}
+        - Block Number: {{ blockchain_info.block_number }}
+        - Timestamp: {{ blockchain_info.timestamp }}
+        
+        ## Reproducibility Info
+        - Git Commit: {{ git_info.commit }}
+        - MLflow Run ID: {{ mlflow_info.run_id }}
+        """)
+    
+    def generate_documentation(self):
+        """Generate comprehensive documentation from tracked data"""
+        # Get experiment data
+        experiment_data = self._current_experiment
+        blockchain_data = self.get_transaction_details(
+            experiment_data['transaction_hash']
+        )
+        
+        # Generate model card
+        model_card = self.doc_template.render(
+            model_name=experiment_data['model_config'].get('name'),
+            model_type=experiment_data['model_config'].get('type'),
+            version=experiment_data.get('version'),
+            timestamp=blockchain_data['timestamp'],
+            dataset_info=experiment_data.get('dataset_info', {}),
+            metrics=experiment_data.get('metrics', {}),
+            parameters=experiment_data['model_config'],
+            env=experiment_data['system_info'],
+            blockchain_info={
+                'tx_hash': experiment_data['transaction_hash'],
+                'block_number': blockchain_data['block_number'],
+                'timestamp': blockchain_data['timestamp']
+            },
+            git_info=experiment_data.get('git_info', {}),
+            mlflow_info=experiment_data.get('mlflow_metadata', {})
+        )
+        
+        # Generate experiment sheet
+        experiment_df = pd.DataFrame([{
+            'Date': blockchain_data['timestamp'],
+            'Model': experiment_data['model_config'].get('name'),
+            'Dataset': experiment_data.get('dataset_info', {}).get('name'),
+            **experiment_data.get('metrics', {}),
+            **experiment_data['model_config'],
+            'TX Hash': experiment_data['transaction_hash']
+        }])
+        
+        return {
+            'model_card': model_card,
+            'experiment_sheet': experiment_df,
+            'blockchain_verification': blockchain_data
+        }
+
+# Usage Example
+tracer = DocumentationTracer(...)
+
+# Training code
+with tracer.start_run():
+    model.train()
+    mlflow.log_metrics({"accuracy": 0.95})
+
+# Generate documentation
+docs = tracer.generate_documentation()
+
+# Save in multiple formats
+docs['model_card'].save('model_card.md')
+docs['experiment_sheet'].to_excel('experiments.xlsx')
+docs['experiment_sheet'].to_csv('experiments.csv')
+```
+
+#### Benefits of Automated Documentation
+
+1. **Single Source of Truth**
+   - All documentation generated from blockchain data
+   - Guaranteed consistency across formats
+   - Verifiable through transaction hashes
+   - Automatic versioning
+
+2. **Time Savings**
+   - No manual documentation
+   - Automatic updates
+   - Format conversion handled
+   - Template-based generation
+
+3. **Standardization**
+   - Consistent format
+   - Required fields enforced
+   - Common structure
+   - Easy comparison
+
+4. **Integration Features**
+   - Export to various formats
+   - API access to documentation
+   - Version control integration
+   - Collaboration tools
+
+5. **Reproducibility**
+   - Environment capture
+   - Dependencies tracked
+   - Code version linked
+   - Data provenance
+
+#### Documentation Templates
+
+1. **Model Card Template**
+```yaml
+model_info:
+  name: required
+  version: required
+  type: required
+  description: optional
+  
+training_data:
+  dataset: required
+  preprocessing: required
+  validation: required
+  
+performance:
+  metrics: required
+  plots: optional
+  limitations: required
+  
+blockchain:
+  tx_hash: required
+  timestamp: required
+  verification: required
+```
+
+2. **Experiment Sheet Structure**
+```python
+experiment_schema = {
+    'date': 'datetime',
+    'model_name': 'string',
+    'dataset': 'string',
+    'metrics': 'dict',
+    'parameters': 'dict',
+    'blockchain_ref': 'string',
+    'mlflow_run': 'string'
+}
+```
+
+#### Best Practices
+
+1. **Documentation Generation**
+   - Generate after each experiment
+   - Include verification links
+   - Store multiple formats
+   - Enable easy updates
+
+2. **Version Control**
+   - Track documentation changes
+   - Link to code versions
+   - Maintain history
+   - Enable rollbacks
+
+3. **Access Control**
+   - Define viewing permissions
+   - Manage edit rights
+   - Track modifications
+   - Ensure integrity
+
+4. **Integration**
+   - Connect with CI/CD
+   - Link to model registry
+   - Enable team collaboration
+   - Support review process
