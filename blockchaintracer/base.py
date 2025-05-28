@@ -49,12 +49,19 @@ class BlockchainTracer:
         Compute a hash of the provided data.
 
         Args:
-            data: Any data that can be serialized to JSON
+            data: Any data that can be serialized to JSON or a file path
 
         Returns:
             str: SHA-256 hash of the data
         """
-        if isinstance(data, bytes):
+        if isinstance(data, str) and os.path.isfile(data):
+            # If data is a file path, hash the file contents
+            sha256_hash = hashlib.sha256()
+            with open(data, "rb") as f:
+                for byte_block in iter(lambda: f.read(4096), b""):
+                    sha256_hash.update(byte_block)
+            return sha256_hash.hexdigest()
+        elif isinstance(data, bytes):
             return hashlib.sha256(data).hexdigest()
         else:
             serialized = json.dumps(data, sort_keys=True)

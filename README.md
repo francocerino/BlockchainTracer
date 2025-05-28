@@ -64,6 +64,7 @@ Provenance of Machine Learning Experiments](https://assets.amazon.science/2f/39/
     - Checklist of [reforms: Reporting Standards for Machine Learning Based Science (2023)](https://arxiv.org/pdf/2308.07832).
     - Minimal Description Profile: [Traceability for Trustworthy AI: A Review of Models and Tools (2021)](https://www.mdpi.com/2504-2289/5/2/20).
     - [Model Cards for Model Reporting](https://arxiv.org/pdf/1810.03993)
+    - [MLFlow for data logging](https://mlflow.org/docs/latest/getting-started/intro-quickstart/)
       
       [Continue list, reading remaining items from 1.]
 
