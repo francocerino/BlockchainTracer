@@ -967,3 +967,19 @@ experiment_schema = {
    - Link to model registry
    - Enable team collaboration
    - Support review process
+
+
+#### more ideas
+
+If You Want Real Reproducibility, Add These
+Here’s what to layer on top of a model card for robust reproducibility:
+
+Tool / Practice	Why it Helps
+- requirements.txt or conda.yaml	Exact dependency versions
+- Training scripts (train.py)	How the model was trained
+- Dataset version pinning	Ensures same training data
+- Seed setting & logging	Controls stochastic behavior
+- Git commit hash in card	Links card to a specific repo state
+- Upload training logs & configs	Show training parameters, loss curves
+- Use huggingface_hub API	Upload artifacts: checkpoints, logs, card
+- Use Docker or replicate.yaml	Freeze runtime environment (optional)
