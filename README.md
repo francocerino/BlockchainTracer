@@ -24,7 +24,7 @@ A single multipurpose Python class.
 
 This case has similar ideas to supply chain traceability, but in this case is traceability for a Machine Learning pipeline, where the idea also aims to improve reproducibility through the use of standards developed for ML leveraged with the transparency, persistence, and immutability characteristics that blockchain provides.
 
-### Roadmap
+### Roadmap:
 
 ### Stage 1
 
