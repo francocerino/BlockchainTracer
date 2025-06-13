@@ -60,7 +60,7 @@ Provenance of Machine Learning Experiments](https://assets.amazon.science/2f/39/
     - Trace computer environment where the ML model was trained.
     - Use Arweave or IPFS for large data, storing its hash in the EVM blockchain.
   
- 4. Fine-tune the case of ML. Requirements for good reproducibility.
+ 4. Fine-tune the requirements for good reproducibility.
     - The NeurIPS 2019 ML reproducibility checklist of [Improving Reproducibility in Machine Learning Research](https://www.jmlr.org/papers/volume22/20-303/20-303.pdf).
     - JSON data structure with every configuration of the ML pipeline (hardware, environment, preprocesses, hyperparameters, seeds, metrics, package versions, etc). Also HDF5? [Traceability for Trustworthy AI: A Review of Models and Tools (2021)](https://www.mdpi.com/2504-2289/5/2/20)
     - Model info sheet of [Leakage and the reproducibility crisis in machine learning-based science (2023)](https://www.cell.com/patterns/pdf/S2666-3899(23)00159-9.pdf)
