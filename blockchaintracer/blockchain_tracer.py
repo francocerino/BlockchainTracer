@@ -22,7 +22,7 @@ class BlockchainTracer:
 
     def __init__(
         self,
-        provider_url: str,
+        provider_url: Optional[str] = None,
         private_key: Optional[str] = None,
         storage_dir: str = "./blockchain_storage",
     ):
@@ -30,14 +30,18 @@ class BlockchainTracer:
         Initialize the blockchain tracer.
 
         Args:
-            provider_url: URL of the blockchain provider (e.g., Infura, Alchemy)
+            provider_url: URL of the blockchain provider (e.g., Infura, Alchemy). Optional.
             private_key: Private key for signing transactions (optional)
             storage_dir: Directory to store files (models, data, etc.)
         """
-        self.web3 = Web3(Web3.HTTPProvider(provider_url))
+        self._blockchain_data = {}
+        if provider_url:
+            self.web3 = Web3(Web3.HTTPProvider(provider_url))
+        else:
+            self.web3 = None
         self.private_key = private_key
         self.account = (
-            self.web3.eth.account.from_key(private_key) if private_key else None
+            self.web3.eth.account.from_key(private_key) if (self.web3 and private_key) else None
         )
 
         # Set up storage directory
@@ -69,51 +73,36 @@ class BlockchainTracer:
 
     def update_data(
         self,
-        data: Optional[Dict[str, Any]] = None,
-        data_type: Optional[str] = None,
-        metadata: Optional[Dict[str, Any]] = None,
         file_paths: Optional[Dict[str, str]] = None,
+        **kwargs
     ) -> Dict[str, Any]:
         """
         Update the current data that will be written to blockchain.
         This method allows accumulating data before writing it to the blockchain.
 
         Args:
-            data: The main data to update or replace current data
-            data_type: Type of data (e.g., 'ml_model', 'scientific_study', 'donation')
-            metadata: Additional metadata about the data
             file_paths: Dictionary of file paths to hash, with keys as identifiers
+            **kwargs: Arbitrary key-value pairs to add/update in the current data dict
 
         Returns:
             Dict containing the current data state
         """
-        if not hasattr(self, '_current_data'):
-            self._current_data = {
-                'data': {},
-                'type': None,
-                'metadata': {},
-                'file_hashes': {}
-            }
+        
 
-        if data is not None:
-            self._current_data['data'] = data
-
-        if data_type is not None:
-            self._current_data['type'] = data_type
-
-        if metadata is not None:
-            self._current_data['metadata'].update(metadata)
+        # Write all kwargs directly to the blockchain data dict
+        for key, value in kwargs.items():
+            self._blockchain_data[key] = value
 
         if file_paths:
             for key, path in file_paths.items():
-                self._current_data['file_hashes'][key] = {
+                self._blockchain_data['file_hashes'][key] = {
                     'path': path,
                     'hash': self.compute_hash(path)
                 }
 
-        return self._current_data
+        return self._blockchain_data
 
-    def write_to_blockchain(self) -> Dict[str, Any]:
+    def write_to_blockchain(self, only_write_hash = False) -> Dict[str, Any]:
         """
         Write the current data to the blockchain.
         Must call update_data first to set the data to write.
@@ -121,38 +110,18 @@ class BlockchainTracer:
         Returns:
             Dict containing transaction details and data hash
         """
-        if not hasattr(self, '_current_data'):
+        if not hasattr(self, '_blockchain_data'):
             raise ValueError("No data to write. Call update_data first.")
-
-        if self._current_data['type'] is None:
-            raise ValueError("Data type must be set before writing to blockchain.")
 
         if not self.account:
             raise ValueError("Private key required for recording data")
 
-        # Prepare the data for blockchain
-        blockchain_data = {
-            'data': self._current_data['data'],
-            'file_references': {
-                key: {
-                    'hash': info['hash'],
-                    'original_path': info['path']
-                }
-                for key, info in self._current_data.get('file_hashes', {}).items()
-            }
-        }
-
         # Prepare the data package
-        timestamp = int(time.time())
-        data_hash = self.compute_hash(blockchain_data)
-
-        data_package = {
-            "hash": data_hash,
-            "type": self._current_data['type'],
-            "timestamp": timestamp,
-            "metadata": self._current_data['metadata'] or {},
-            "recorder": self.account.address,
-        }
+        if only_write_hash:
+            data_hash = self.compute_hash(self._blockchain_data)
+            data_package = data_hash
+        else:
+            data_package = self._blockchain_data
 
         # Sign the data package
         message = encode_defunct(text=json.dumps(data_package, sort_keys=True))
@@ -207,8 +176,8 @@ class BlockchainTracer:
             "block_number": tx_receipt.blockNumber,
         }
 
-        # Store the transaction hash in the current data
-        self._current_data['transaction_hash'] = result['transaction_hash']
+        # Store the transaction hash in the blockchain data
+        self._blockchain_data['transaction_hash'] = result['transaction_hash']
 
         return result
 
@@ -269,21 +238,15 @@ class BlockchainTracer:
             "local_data": local_data
         }
 
-    def verify_data(
-        self, original_data: Any, blockchain_record: Dict[str, Any]
-    ) -> bool:
+    def get_data(self) -> dict:
         """
-        Verify that data matches what was recorded on the blockchain.
-
-        Args:
-            original_data: The original data to verify
-            blockchain_record: The record returned from trace
-
-        Returns:
-            bool: True if the data matches the blockchain record
+        Return a copy of the current blockchain data being traced.
+        Returns None if no data has been initialized yet.
         """
-        computed_hash = self.compute_hash(original_data)
-        return computed_hash == blockchain_record.get("data_hash")
+        if hasattr(self, '_blockchain_data') and self._blockchain_data is not None:
+            return self._blockchain_data.copy()
+        return None
+
 
 
 # Ver:

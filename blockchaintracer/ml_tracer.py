@@ -1,10 +1,12 @@
 from typing import Dict, Any, Optional
 import platform
-import pkg_resources
-import docker
+import importlib.metadata
+#import docker
 from datetime import datetime
 from huggingface_hub import DatasetCardData, ModelCardData
-from .base import BlockchainTracer
+import json
+
+from blockchain_tracer import BlockchainTracer
 
 class MLTracer(BlockchainTracer):
     """
@@ -13,24 +15,34 @@ class MLTracer(BlockchainTracer):
     while adding ML-specific features.
     """
 
-    def __init__(self, provider_url: str, private_key: Optional[str] = None, storage_dir: str = "./blockchain_storage"):
+    def __init__(self, provider_url: Optional[str] = None, private_key: Optional[str] = None, storage_dir: str = "./ml_tracer_storage"):
+        """
+        Initialize the MLTracer with optional blockchain provider, private key, and storage directory.
+        Sets up experiment tracking and card field introspection.
+        """
         super().__init__(provider_url, private_key, storage_dir)
-        self._current_experiment = None
+        # self._blockchain_data = {} # check: heredado?
         self._experiment_history = []
-        self._model_card = None
-        self._data_card = None
         self._model_card_fields = self._get_card_fields(ModelCardData)
         self._data_card_fields = self._get_card_fields(DatasetCardData)
+        self._model_card = None
+        self._data_card = None
+
+        self._blockchain_data['system_info'] = self._get_system_info()
+        #self.update_model_card()  # Initialize _model_card and experiment state
+        #self.update_data_card()   # Initialize _data_card and experiment state
 
     def _get_system_info(self) -> Dict[str, Any]:
-        """Get system information including OS, Python version, and package versions."""
+        """
+        Collect system information: OS, Python version, and all installed package versions.
+        Used for experiment reproducibility and traceability.
+        """
         system_info = {
             'os': platform.platform(),
             'python_version': platform.python_version(),
-            'packages': {
-                pkg.key: pkg.version for pkg in pkg_resources.working_set
-            }
-        }
+            'packages': {dist.metadata['Name']: dist.version for dist in importlib.metadata.distributions()},
+            'timestamp': int(datetime.now().timestamp())
+        }  # check: es mejor un requirements.txt? 
         
         try:
             docker_client = docker.from_env()
@@ -39,15 +51,15 @@ class MLTracer(BlockchainTracer):
                 'info': docker_client.info()
             }
         except:
-            system_info['docker'] = None
-            
+            # system_info['docker'] = None
+            pass 
         return system_info
 
     def _get_card_fields(self, card_class) -> Dict[str, Any]:
         """
-        Extract fields and their descriptions from a Hugging Face card class using introspection.
+        Introspect a Hugging Face card class to extract all public fields and their descriptions.
+        Returns a dictionary mapping field names to descriptions.
         """
-        # Create an instance to get default values
         card_instance = card_class()
         
         # Get all attributes that are not private or special methods
@@ -69,150 +81,120 @@ class MLTracer(BlockchainTracer):
         return fields
 
     @property
-    def model_card(self) -> Optional[ModelCardData]:
-        """Get the current model card."""
+    def get_model_card(self) -> Optional[ModelCardData]:
+        """
+        Get the current Hugging Face ModelCardData object for this experiment.
+        """
         return self._model_card
 
     @property
-    def data_card(self) -> Optional[DatasetCardData]:
-        """Get the current data card."""
+    def get_data_card(self) -> Optional[DatasetCardData]:
+        """
+        Get the current Hugging Face DatasetCardData object for this experiment.
+        """
         return self._data_card
 
     @property
     def model_card_fields(self) -> Dict[str, str]:
-        """Get all available model card fields with their descriptions."""
+        """
+        Get all available model card fields and their descriptions.
+        """
         return self._model_card_fields
 
     @property
     def data_card_fields(self) -> Dict[str, str]:
-        """Get all available data card fields with their descriptions."""
+        """
+        Get all available data card fields and their descriptions.
+        """
         return self._data_card_fields
 
-    def model_card(self, **kwargs) -> Dict[str, Any]:
+    def _update_card(self, card_obj, card_type, card_fields, kwargs):
         """
-        Create or update a Model Card using Hugging Face's ModelCardData format.
-        https://huggingface.co/docs/hub/model-cards
+        Shared logic for updating either a model card or data card.
+        Updates the card object, blockchain data, and returns a summary dict including all traced data.
+        """
+        for key, value in kwargs.items():
+            setattr(card_obj, key, value)
+
+        card_to_dict = {card_type : card_obj.to_dict()}
+        
+        self.update_data(**card_to_dict)
+
+        """
+        fields_status = {
+            'filled': {k: v for k, v in card_obj.to_dict().items()},
+            'available': {k: v for k, v in card_fields.items() if k not in card_obj.to_dict()},
+            'descriptions': card_fields
+        }
+        
+        print( {
+            "fields_filled": list(fields_status['filled'].keys()),
+            "fields_available": list(fields_status['available'].keys()),
+            "experiment_data": self._blockchain_data.copy()
+        })
+        """
+        
+        return card_obj
+
+    def update_model_card(self, **kwargs) -> dict:
+        """
+        Update or create the model card for this experiment.
+        Accepts keyword arguments for model card fields.
+        Returns a summary dict of the update.
         """
         if self._model_card is None:
             self._model_card = ModelCardData()
+        if kwargs:
+            card_obj = self._update_card(
+                self._model_card, "model_card", self._model_card_fields, kwargs
+            )
+            self._model_card = card_obj
+        else:
+            raise ValueError('No keyword arguments provided to model card.')
+        
+        return self._blockchain_data.copy()
 
-        for key, value in kwargs.items():
-            setattr(self._model_card, key, value)
-
-        # Create visualization of fields
-        fields_status = {
-            'filled': {k: v for k, v in self._model_card.to_dict().items()},
-            'available': {k: v for k, v in self._model_card_fields.items() if k not in self._model_card.to_dict()},
-            'descriptions': self._model_card_fields
-        }
-
-        # Initialize experiment if needed
-        if self._current_experiment is None:
-            self._current_experiment = {
-                'system_info': self._get_system_info(),
-                'model_config': {},
-                'metrics': {},
-                'additional_info': {}
-            }
-
-        # Update experiment with model card
-        self._current_experiment['model_card'] = self._model_card.to_dict()
-
-        # Update the base class's data
-        base_data = self.update_data(
-            data=self._current_experiment,
-            data_type='ml_experiment',
-            metadata={
-                'framework': self._current_experiment.get('model_config', {}).get('framework', 'unknown'),
-                'experiment_sequence': len(self._experiment_history)
-            }
-        )
-
-        # Update file hashes in current experiment
-        self._current_experiment['file_hashes'] = base_data['file_hashes']
-
-        return {
-            "model_card": self._model_card.to_dict(),
-            "system_info": self._get_system_info(),
-            "timestamp": int(datetime.now().timestamp()),
-            "fields_status": fields_status
-        }
-
-    def data_card(self, **kwargs) -> Dict[str, Any]:
+    def update_data_card(self, **kwargs) -> dict:
         """
-        Create or update a Data Card using Hugging Face's DatasetCardData format.
-        https://huggingface.co/docs/hub/datasets-cards
+        Update or create the data card for this experiment.
+        Accepts keyword arguments for data card fields.
+        Returns a summary dict of the update.
         """
         if self._data_card is None:
             self._data_card = DatasetCardData()
 
-        for key, value in kwargs.items():
-            setattr(self._data_card, key, value)
-
-        # Create visualization of fields
-        fields_status = {
-            'filled': {k: v for k, v in self._data_card.to_dict().items()},
-            'available': {k: v for k, v in self._data_card_fields.items() if k not in self._data_card.to_dict()},
-            'descriptions': self._data_card_fields
-        }
-
-        # Initialize experiment if needed
-        if self._current_experiment is None:
-            self._current_experiment = {
-                'system_info': self._get_system_info(),
-                'model_config': {},
-                'metrics': {},
-                'additional_info': {}
-            }
-
-        # Update experiment with data card
-        self._current_experiment['data_card'] = self._data_card.to_dict()
-
-        # Update the base class's data
-        base_data = self.update_data(
-            data=self._current_experiment,
-            data_type='ml_experiment',
-            metadata={
-                'framework': self._current_experiment.get('model_config', {}).get('framework', 'unknown'),
-                'experiment_sequence': len(self._experiment_history)
-            }
-        )
-
-        # Update file hashes in current experiment
-        self._current_experiment['file_hashes'] = base_data['file_hashes']
-
-        return {
-            "data_card": self._data_card.to_dict(),
-            "system_info": self._get_system_info(),
-            "timestamp": int(datetime.now().timestamp()),
-            "fields_status": fields_status
-        }
+        if kwargs:
+            card_obj = self._update_card(
+                self._data_card, "data_card", self._data_card_fields, kwargs,
+            )
+            self._data_card = card_obj
+        else:
+            raise ValueError('No keyword arguments provided to data card.')
+        
+        return self._blockchain_data.copy()
 
     def trace_experiment(self) -> Dict[str, Any]:
         """
-        Write the current experiment data to the blockchain.
-        Must have created or updated at least one card (model or data) first.
-
-        Returns:
-            Dict containing transaction details and data hash
+        Write the current experiment data (including model/data cards) to the blockchain.
+        Returns transaction details and data hash.
         """
-        if self._current_experiment is None:
+        if self._blockchain_data is None:
             raise ValueError("No experiment data to write. Create or update a card first.")
 
         # Add to experiment history
-        self._experiment_history.append(self._current_experiment.copy())
+        self._experiment_history.append(self._blockchain_data.copy())
 
         # If there are previous experiments, link them
         if len(self._experiment_history) > 1:
             previous_tx = self._experiment_history[-2].get('transaction_hash')
             if previous_tx:
-                self._current_experiment['previous_transaction'] = previous_tx
+                self._blockchain_data['previous_transaction'] = previous_tx
 
         # Write to blockchain using base class method
         result = super().write_to_blockchain()
 
         # Store the transaction hash in the experiment data
-        self._current_experiment['transaction_hash'] = result['transaction_hash']
+        self._blockchain_data['transaction_hash'] = result['transaction_hash']
 
         return result
 
@@ -256,27 +238,3 @@ class MLTracer(BlockchainTracer):
                 }
             }
 
-    def verify_experiment(self, 
-                         original_data: Dict[str, Any], 
-                         tx_hash: str) -> Dict[str, Any]:
-        """
-        Verify an ML experiment record on the blockchain.
-        
-        Args:
-            original_data: The original experiment data to verify
-            tx_hash: Transaction hash of the recorded experiment
-            
-        Returns:
-            Dict containing verification results
-        """
-        # Get the blockchain record
-        tx_details = self.get_transaction_details(tx_hash)
-        
-        # Verify the data matches
-        is_valid = self.verify_data(original_data, tx_details)
-        
-        return {
-            'is_valid': is_valid,
-            'blockchain_record': tx_details,
-            'verification_time': self.web3.eth.get_block('latest').timestamp
-        } 
