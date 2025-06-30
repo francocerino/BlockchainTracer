@@ -165,34 +165,26 @@ class BlockchainTracer:
             message, private_key=self.__private_key
         )
 
+        result = {
+            "transaction_success": tx_receipt.status == 1,
+            "data_package": data_package,
+            "data_signature": signed_message.signature.hex(),
+            "signed_by": self.account.address,
+            "transaction_hash": tx_hash.hex(),
+            "block_number": tx_receipt.blockNumber,
+            "block_timestamp": self.web3.eth.get_block(
+                            tx_receipt.blockNumber
+                        ).timestamp
+        }
+
         if save_locally:
             # Use the provided storage_dir or default to self.storage_dir
             local_storage_dir = storage_dir if storage_dir is not None else self.storage_dir
             os.makedirs(local_storage_dir, exist_ok=True)
             local_file_path = os.path.join(local_storage_dir, f"{data_hash}.json")
             with open(local_file_path, "w") as f:
-                json.dump(
-                    {
-                        "data_package": data_package,
-                        "signature": signed_message.signature.hex(),
-                        "tx_hash": tx_hash.hex(),
-                        "block_number": tx_receipt.blockNumber,
-                        "block_timestamp": self.web3.eth.get_block(
-                            tx_receipt.blockNumber
-                        ).timestamp,
-                    },
-                    f,
-                )
+                json.dump(result,f)
 
-        result = {
-            "success": tx_receipt.status == 1,
-            #"data_hash": data_hash,
-            "data_package": data_package,
-            "signature": signed_message.signature.hex(),
-            "signed_by": self.account.address,
-            "transaction_hash": tx_hash.hex(),
-            "block_number": tx_receipt.blockNumber,
-        }
         return result
 
     def get_transaction_details(self, tx_hash: str) -> Dict[str, Any]:
