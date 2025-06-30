@@ -110,7 +110,7 @@ class BlockchainTracer:
         if file_paths:
             for key, path in file_paths.items():
                 self._blockchain_data['file_hashes'][key] = {
-                    'path': path,
+                    #'path': path,
                     'hash': self.compute_hash(path)
                 }
 
@@ -133,7 +133,7 @@ class BlockchainTracer:
             raise ValueError("No data to write. Call update_data first.")
 
         if not self.account:
-            raise ValueError("Private key required for recording data")
+            raise ValueError("Private key required for recording data.")
 
         # Prepare the data package
         if only_write_hash:
@@ -155,6 +155,7 @@ class BlockchainTracer:
             "gasPrice": self.web3.eth.gas_price,
             "nonce": self.web3.eth.get_transaction_count(self.account.address),
             "data": self.web3.to_hex(text=serialized_data),
+            "chainId": self.web3.eth.chain_id,  # optional but recommended
         }
 
         try:
@@ -163,13 +164,16 @@ class BlockchainTracer:
             warnings.warn(f"Gas estimation failed, using default gas = {default_gas}. Error: {e}")
             tx["gas"] = default_gas
 
-        # Sign and send transaction
-        signed_tx = self.account.sign_transaction(tx)
-        tx_hash = self.web3.eth.send_raw_transaction(signed_tx.raw_transaction)
+        try:
+            # Sign and send transaction
+            signed_tx = self.account.sign_transaction(tx)
+            tx_hash = self.web3.eth.send_raw_transaction(signed_tx.raw_transaction)
 
-        # Wait for transaction receipt
-        tx_receipt = self.web3.eth.wait_for_transaction_receipt(tx_hash)
-
+            # Wait for transaction receipt
+            tx_receipt = self.web3.eth.wait_for_transaction_receipt(tx_hash)
+        except Exception as e:
+            raise RuntimeError(f"Transaction failed: {e}")   
+        
         ## Store the transaction hash in the blockchain data
         #self._blockchain_data['transaction_hash'] = tx_hash.hex()
 
@@ -189,7 +193,8 @@ class BlockchainTracer:
             "block_timestamp": self.web3.eth.get_block(
                             tx_receipt.blockNumber
                         ).timestamp,
-            "tx": tx
+            "tx_dict_to_sign": tx,
+            "tx_receipt": tx_receipt
         }
 
         if save_locally:
