@@ -57,13 +57,20 @@ class BlockchainTracer:
 
     def compute_hash(self, data: Any) -> str:
         """
-        Compute a hash of the provided data.
+        Compute a SHA-256 hash for the provided data.
+
+        This function supports three main use cases:
+        1. If `data` is a string and is a valid file path, it reads the file in chunks and computes the hash of its contents.
+        2. If `data` is a bytes object, it computes the hash directly from those bytes.
+        3. For any other type (e.g., dict, list, or string that is not a file path), it serializes the data to a JSON string (with sorted keys for consistency) and computes the hash of the resulting UTF-8 encoded string.
+
+        This approach ensures that you can generate a unique, reproducible hash for files, raw bytes, or structured data (like dicts or lists), which is useful for verifying data integrity or storing fingerprints on the blockchain.
 
         Args:
-            data: Any data that can be serialized to JSON or a file path
+            data: The data to hash. Can be a file path (str), bytes, or any JSON-serializable object.
 
         Returns:
-            str: SHA-256 hash of the data
+            str: The SHA-256 hash as a hexadecimal string.
         """
         if isinstance(data, str) and os.path.isfile(data):
             # If data is a file path, hash the file contents
@@ -139,15 +146,22 @@ class BlockchainTracer:
         serialized_data = json.dumps(data_package)
 
         # Create transaction
+        default_gas = 100000
         tx = {
             "from": self.account.address,
             "to": self.account.address,  # Send to self
             "value": 0,
-            "gas": 100000,  # Adjust as needed
+            "gas": default_gas,  # initial guess, will be overwritten if estimate succeeds
             "gasPrice": self.web3.eth.gas_price,
             "nonce": self.web3.eth.get_transaction_count(self.account.address),
             "data": self.web3.to_hex(text=serialized_data),
         }
+
+        try:
+            tx["gas"] = self.web3.eth.estimate_gas(tx)
+        except Exception as e:
+            warnings.warn(f"Gas estimation failed, using default gas = {default_gas}. Error: {e}")
+            tx["gas"] = default_gas
 
         # Sign and send transaction
         signed_tx = self.account.sign_transaction(tx)
@@ -156,8 +170,8 @@ class BlockchainTracer:
         # Wait for transaction receipt
         tx_receipt = self.web3.eth.wait_for_transaction_receipt(tx_hash)
 
-        # Store the transaction hash in the blockchain data
-        self._blockchain_data['transaction_hash'] = tx_hash.hex()
+        ## Store the transaction hash in the blockchain data
+        #self._blockchain_data['transaction_hash'] = tx_hash.hex()
 
         # Always compute the signature
         message = encode_defunct(text=json.dumps(data_package, sort_keys=True))
@@ -174,7 +188,8 @@ class BlockchainTracer:
             "block_number": tx_receipt.blockNumber,
             "block_timestamp": self.web3.eth.get_block(
                             tx_receipt.blockNumber
-                        ).timestamp
+                        ).timestamp,
+            "tx": tx
         }
 
         if save_locally:
@@ -201,34 +216,34 @@ class BlockchainTracer:
         # Get blockchain transaction data
         tx = self.web3.eth.get_transaction(tx_hash)
         receipt = self.web3.eth.get_transaction_receipt(tx_hash)
-
+        
         # Try to decode the data
         data = {}
         if tx.input and tx.input != "0x":
             try:
-                # Remove '0x' prefix and decode
-                hex_data = tx.input[2:]
+                hex_data = tx.input.hex() # [2:]
                 decoded_data = bytes.fromhex(hex_data).decode("utf-8")
                 data = json.loads(decoded_data)
             except (UnicodeDecodeError, json.JSONDecodeError):
-                data = {"raw": tx.input}
+                # Try to show as UTF-8 string if possible
+                try:
+                    data = {"raw": bytes.fromhex(hex_data).decode("utf-8")}
+                except Exception:
+                    data = {"raw": tx.input}
 
-        # Get block timestamp
-        block_timestamp = self.web3.eth.get_block(tx.blockNumber).timestamp
+        ## Try to get local file data if it exists
+        #local_data = None
+        #if data.get("hash"):
+        #    local_file_path = os.path.join(self.storage_dir, f"{data['hash']}.json")
+        #    if os.path.exists(local_file_path):
+        #        with open(local_file_path, "r") as f:
+        #            local_data = json.load(f)
 
-        # Try to get local file data if it exists
-        local_data = None
-        if data.get("hash"):
-            local_file_path = os.path.join(self.storage_dir, f"{data['hash']}.json")
-            if os.path.exists(local_file_path):
-                with open(local_file_path, "r") as f:
-                    local_data = json.load(f)
-
-        return {
+        tx_data = {
             "transaction": {
                 "hash": tx_hash,
                 "block_number": tx.blockNumber,
-                "block_timestamp": block_timestamp,
+                "block_timestamp": self.web3.eth.get_block(tx.blockNumber).timestamp,
                 "from": tx["from"],
                 "to": tx["to"],
                 "value": self.web3.from_wei(tx.value, "ether"),
@@ -241,8 +256,9 @@ class BlockchainTracer:
                 "gas_used": receipt.gasUsed,
                 "logs": [dict(log) for log in receipt.logs],
             },
-            "local_data": local_data
         }
+
+        return tx_data
 
     def get_data(self) -> dict:
         """
