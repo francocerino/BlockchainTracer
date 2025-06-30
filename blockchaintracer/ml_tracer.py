@@ -15,12 +15,17 @@ class MLTracer(BlockchainTracer):
     while adding ML-specific features.
     """
 
-    def __init__(self, provider_url: Optional[str] = None, private_key: Optional[str] = None, storage_dir: str = "./ml_tracer_storage"):
+    def __init__(self, provider_url: Optional[str] = None, storage_dir: str = "./ml_tracer_storage"):
         """
-        Initialize the MLTracer with optional blockchain provider, private key, and storage directory.
+        Initialize the MLTracer with optional blockchain provider and storage directory.
         Sets up experiment tracking and card field introspection.
+        Args:
+            provider_url: Blockchain provider URL (optional)
+            storage_dir: Directory to store files (models, data, etc.)
+        Note:
+            The private key is loaded exclusively from the BLOCKCHAIN_PRIVATE_KEY environment variable via the base class for security reasons.
         """
-        super().__init__(provider_url, private_key, storage_dir)
+        super().__init__(provider_url, storage_dir)
         # self._blockchain_data = {} # check: heredado?
         self._experiment_history = []
         self._model_card_fields = self._get_card_fields(ModelCardData)

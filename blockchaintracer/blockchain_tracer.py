@@ -5,6 +5,7 @@ import time
 from typing import Any, Dict, Optional
 from web3 import Web3
 from eth_account.messages import encode_defunct
+import warnings
 
 
 class BlockchainTracer:
@@ -23,30 +24,36 @@ class BlockchainTracer:
     def __init__(
         self,
         provider_url: Optional[str] = None,
-        private_key: Optional[str] = None,
-        storage_dir: str = "./blockchain_storage",
     ):
         """
         Initialize the blockchain tracer.
 
         Args:
             provider_url: URL of the blockchain provider (e.g., Infura, Alchemy). Optional.
-            private_key: Private key for signing transactions (optional)
-            storage_dir: Directory to store files (models, data, etc.)
+        Note:
+            The private key is loaded exclusively from the BLOCKCHAIN_PRIVATE_KEY environment variable for security reasons.
         """
         self._blockchain_data = {}
+        self.web3 = None
+        self.account = None
+        self.__private_key = os.environ.get("BLOCKCHAIN_PRIVATE_KEY", None)
         if provider_url:
             self.web3 = Web3(Web3.HTTPProvider(provider_url))
+            if self.__private_key:
+                self.account = self.web3.eth.account.from_key(self.__private_key)
+            else:
+                warnings.warn(
+                    "No private key provided. The tracer is in read-only mode.\n"
+                    "For security, set the BLOCKCHAIN_PRIVATE_KEY environment variable in your shell before starting Jupyter or Python,\n"
+                    "Never set your private key directly in a notebook."
+                ) # or use a .env file with python-dotenv
         else:
-            self.web3 = None
-        self.private_key = private_key
-        self.account = (
-            self.web3.eth.account.from_key(private_key) if (self.web3 and private_key) else None
-        )
+            warnings.warn(
+                "No provider_url specified. Blockchain operations (read/write) will not be available.\n"
+                "Set the provider_url argument to connect to a blockchain node (e.g., Infura or Alchemy)."
+            )
 
-        # Set up storage directory
-        self.storage_dir = storage_dir
-        os.makedirs(storage_dir, exist_ok=True)
+
 
     def compute_hash(self, data: Any) -> str:
         """
@@ -100,12 +107,17 @@ class BlockchainTracer:
                     'hash': self.compute_hash(path)
                 }
 
-        return self._blockchain_data
+        return self._blockchain_data.copy()
 
-    def write_to_blockchain(self, only_write_hash = False) -> Dict[str, Any]:
+    def write_to_blockchain(self, only_write_hash = False, save_locally = False, storage_dir: str = './blockchain_storage') -> Dict[str, Any]:
         """
         Write the current data to the blockchain.
         Must call update_data first to set the data to write.
+
+        Args:
+            only_write_hash: If True, only the hash of the data is written to the blockchain.
+            save_locally: If True, save the data package and signature locally.
+            storage_dir: Optional directory to save local files.
 
         Returns:
             Dict containing transaction details and data hash
@@ -123,12 +135,6 @@ class BlockchainTracer:
         else:
             data_package = self._blockchain_data
 
-        # Sign the data package
-        message = encode_defunct(text=json.dumps(data_package, sort_keys=True))
-        signed_message = self.web3.eth.account.sign_message(
-            message, private_key=self.private_key
-        )
-
         # Store the data package on the blockchain by sending a transaction with the data in the input field
         serialized_data = json.dumps(data_package)
 
@@ -145,40 +151,48 @@ class BlockchainTracer:
 
         # Sign and send transaction
         signed_tx = self.account.sign_transaction(tx)
-        tx_hash = self.web3.eth.send_raw_transaction(signed_tx.rawTransaction)
+        tx_hash = self.web3.eth.send_raw_transaction(signed_tx.raw_transaction)
 
         # Wait for transaction receipt
         tx_receipt = self.web3.eth.wait_for_transaction_receipt(tx_hash)
 
-        # Save data locally for easier retrieval
-        local_file_path = os.path.join(self.storage_dir, f"{data_hash}.json")
-        with open(local_file_path, "w") as f:
-            json.dump(
-                {
-                    "data_package": data_package,
-                    "signature": signed_message.signature.hex(),
-                    "tx_hash": tx_hash.hex(),
-                    "block_number": tx_receipt.blockNumber,
-                    "block_timestamp": self.web3.eth.get_block(
-                        tx_receipt.blockNumber
-                    ).timestamp,
-                },
-                f,
-            )
+        # Store the transaction hash in the blockchain data
+        self._blockchain_data['transaction_hash'] = tx_hash.hex()
+
+        # Always compute the signature
+        message = encode_defunct(text=json.dumps(data_package, sort_keys=True))
+        signed_message = self.web3.eth.account.sign_message(
+            message, private_key=self.__private_key
+        )
+
+        if save_locally:
+            # Use the provided storage_dir or default to self.storage_dir
+            local_storage_dir = storage_dir if storage_dir is not None else self.storage_dir
+            os.makedirs(local_storage_dir, exist_ok=True)
+            local_file_path = os.path.join(local_storage_dir, f"{data_hash}.json")
+            with open(local_file_path, "w") as f:
+                json.dump(
+                    {
+                        "data_package": data_package,
+                        "signature": signed_message.signature.hex(),
+                        "tx_hash": tx_hash.hex(),
+                        "block_number": tx_receipt.blockNumber,
+                        "block_timestamp": self.web3.eth.get_block(
+                            tx_receipt.blockNumber
+                        ).timestamp,
+                    },
+                    f,
+                )
 
         result = {
             "success": tx_receipt.status == 1,
-            "data_hash": data_hash,
+            #"data_hash": data_hash,
             "data_package": data_package,
             "signature": signed_message.signature.hex(),
             "signed_by": self.account.address,
             "transaction_hash": tx_hash.hex(),
             "block_number": tx_receipt.blockNumber,
         }
-
-        # Store the transaction hash in the blockchain data
-        self._blockchain_data['transaction_hash'] = result['transaction_hash']
-
         return result
 
     def get_transaction_details(self, tx_hash: str) -> Dict[str, Any]:
