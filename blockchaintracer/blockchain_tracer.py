@@ -62,9 +62,11 @@ class BlockchainTracer:
         This function supports three main use cases:
         1. If `data` is a string and is a valid file path, it reads the file in chunks and computes the hash of its contents.
         2. If `data` is a bytes object, it computes the hash directly from those bytes.
-        3. For any other type (e.g., dict, list, or string that is not a file path), it serializes the data to a JSON string (with sorted keys for consistency) and computes the hash of the resulting UTF-8 encoded string.
+        3. For any other type (e.g., dict, list, or string that is not a file path), it serializes the data to a JSON string
+           (with sorted keys for consistency) and computes the hash of the resulting UTF-8 encoded string.
 
-        This approach ensures that you can generate a unique, reproducible hash for files, raw bytes, or structured data (like dicts or lists), which is useful for verifying data integrity or storing fingerprints on the blockchain.
+        This approach ensures generating a unique, reproducible hash for files, raw bytes, or structured data
+        (like dicts or lists), which is useful for verifying data integrity or storing fingerprints on the blockchain.
 
         Args:
             data: The data to hash. Can be a file path (str), bytes, or any JSON-serializable object.
@@ -146,18 +148,16 @@ class BlockchainTracer:
         serialized_data = json.dumps(data_package)
 
         # Create transaction
-        default_gas = 100000
         tx = {
             "from": self.account.address,
             "to": self.account.address,  # Send to self
             "value": 0,
-            "gas": default_gas,  # initial guess, will be overwritten if estimate succeeds
             "gasPrice": self.web3.eth.gas_price,
             "nonce": self.web3.eth.get_transaction_count(self.account.address),
             "data": self.web3.to_hex(text=serialized_data),
             "chainId": self.web3.eth.chain_id,  # optional but recommended
         }
-
+        default_gas = 100000 # initial guess of gas needed
         try:
             tx["gas"] = self.web3.eth.estimate_gas(tx)
         except Exception as e:
