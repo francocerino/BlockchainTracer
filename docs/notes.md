@@ -983,3 +983,72 @@ Tool / Practice	Why it Helps
 - Upload training logs & configs	Show training parameters, loss curves
 - Use huggingface_hub API	Upload artifacts: checkpoints, logs, card
 - Use Docker or replicate.yaml	Freeze runtime environment (optional)
+
+
+
+####
+
+
+Model architecture, hyperparameters, dataset version, code version (git hash), environment (Python, library versions), random seeds, etc.
+
+tell the user what to save seems a good idea!
+
+example: 
+
+experiment_metadata = {
+    "experiment_id": "exp_001",
+    "timestamp": 1751294267,
+    "author": "alice@example.com",
+    "description": "Baseline ResNet on CIFAR-10",
+    "model": {
+        "architecture": "ResNet50",
+        "hyperparameters": {
+            "learning_rate": 0.001,
+            "batch_size": 32,
+            "epochs": 50
+        },
+        "weights_hash": "Qm...IPFS_HASH...",
+        "script_hash": "abc123def456...",
+    },
+    "data": {
+        "dataset_name": "CIFAR-10",
+        "dataset_version": "1.0",
+        "dataset_hash": "def456abc789...",
+        "splits": {"train": 0.8, "val": 0.1, "test": 0.1},
+        "preprocessing": "normalized, resized to 32x32"
+    },
+    "code": {
+        "git_commit": "a1b2c3d4",
+        "python_version": "3.10.4",
+        "requirements_hash": "789abc123def...",
+        "random_seed": 42,
+        "hardware": "NVIDIA RTX 3090, 32GB RAM"
+    },
+    "results": {
+        "accuracy": 0.92,
+        "f1_score": 0.91,
+        "eval_dataset_hash": "ghi789jkl012...",
+        "eval_script_hash": "xyz987uvw654...",
+        "model_card_uri": "https://huggingface.co/your-model-card"
+    },
+    "lineage": {
+        "parent_tx_hash": "0xabc123...",
+        "notes": "Fine-tuned from exp_000"
+    },
+    "compliance": {
+        "data_consent": True,
+        "bias_evaluation": "No significant bias detected",
+        "intended_use": "Academic research"
+    }
+}
+
+
+###
+
+
+mlflow.
+
+1. Automated Experiment Tracking
+2. Standardized Metadata
+
+i think that mlflow internally is good for bes user experience

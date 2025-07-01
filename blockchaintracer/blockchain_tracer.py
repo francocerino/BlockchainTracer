@@ -131,8 +131,8 @@ class BlockchainTracer:
         Returns:
             Dict containing transaction details and data hash
         """
-        if not hasattr(self, "_blockchain_data"):
-            raise ValueError("No data to write. Call update_data first.")
+        if self._blockchain_data is {}:
+            raise ValueError("No data to write in blockchain.")
 
         if not self.account:
             raise ValueError("Private key required for recording data.")
