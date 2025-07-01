@@ -1,12 +1,14 @@
 from typing import Dict, Any, Optional
 import platform
 import importlib.metadata
-#import docker
+
+# import docker
 from datetime import datetime
 from huggingface_hub import DatasetCardData, ModelCardData
 import json
 
 from blockchain_tracer import BlockchainTracer
+
 
 class MLTracer(BlockchainTracer):
     """
@@ -15,7 +17,11 @@ class MLTracer(BlockchainTracer):
     while adding ML-specific features.
     """
 
-    def __init__(self, provider_url: Optional[str] = None, storage_dir: str = "./ml_tracer_storage"):
+    def __init__(
+        self,
+        provider_url: Optional[str] = None,
+        storage_dir: str = "./ml_tracer_storage",
+    ):
         """
         Initialize the MLTracer with optional blockchain provider and storage directory.
         Sets up experiment tracking and card field introspection.
@@ -33,9 +39,9 @@ class MLTracer(BlockchainTracer):
         self._model_card = None
         self._data_card = None
 
-        self._blockchain_data['system_info'] = self._get_system_info()
-        #self.update_model_card()  # Initialize _model_card and experiment state
-        #self.update_data_card()   # Initialize _data_card and experiment state
+        self._blockchain_data["system_info"] = self._get_system_info()
+        # self.update_model_card()  # Initialize _model_card and experiment state
+        # self.update_data_card()   # Initialize _data_card and experiment state
 
     def _get_system_info(self) -> Dict[str, Any]:
         """
@@ -43,21 +49,24 @@ class MLTracer(BlockchainTracer):
         Used for experiment reproducibility and traceability.
         """
         system_info = {
-            'os': platform.platform(),
-            'python_version': platform.python_version(),
-            'packages': {dist.metadata['Name']: dist.version for dist in importlib.metadata.distributions()},
-            'timestamp': int(datetime.now().timestamp())
-        }  # check: es mejor un requirements.txt? 
-        
+            "os": platform.platform(),
+            "python_version": platform.python_version(),
+            "packages": {
+                dist.metadata["Name"]: dist.version
+                for dist in importlib.metadata.distributions()
+            },
+            "timestamp": int(datetime.now().timestamp()),
+        }  # check: es mejor un requirements.txt?
+
         try:
             docker_client = docker.from_env()
-            system_info['docker'] = {
-                'version': docker_client.version(),
-                'info': docker_client.info()
+            system_info["docker"] = {
+                "version": docker_client.version(),
+                "info": docker_client.info(),
             }
         except:
             # system_info['docker'] = None
-            pass 
+            pass
         return system_info
 
     def _get_card_fields(self, card_class) -> Dict[str, Any]:
@@ -66,23 +75,27 @@ class MLTracer(BlockchainTracer):
         Returns a dictionary mapping field names to descriptions.
         """
         card_instance = card_class()
-        
+
         # Get all attributes that are not private or special methods
         fields = {}
         for attr_name in dir(card_instance):
             # Skip private attributes and methods
-            if not attr_name.startswith('_') and not callable(getattr(card_instance, attr_name)):
+            if not attr_name.startswith("_") and not callable(
+                getattr(card_instance, attr_name)
+            ):
                 # Get the attribute value
                 attr_value = getattr(card_instance, attr_name)
-                
+
                 # Get the type hint if available
-                type_hint = getattr(card_instance.__class__, '__annotations__', {}).get(attr_name, type(attr_value).__name__)
-                
+                type_hint = getattr(card_instance.__class__, "__annotations__", {}).get(
+                    attr_name, type(attr_value).__name__
+                )
+
                 # Create a description based on the field name and type
                 description = f"{attr_name.replace('_', ' ').title()} ({type_hint})"
-                
+
                 fields[attr_name] = description
-        
+
         return fields
 
     @property
@@ -121,8 +134,8 @@ class MLTracer(BlockchainTracer):
         for key, value in kwargs.items():
             setattr(card_obj, key, value)
 
-        card_to_dict = {card_type : card_obj.to_dict()}
-        
+        card_to_dict = {card_type: card_obj.to_dict()}
+
         self.update_data(**card_to_dict)
 
         """
@@ -138,7 +151,7 @@ class MLTracer(BlockchainTracer):
             "experiment_data": self._blockchain_data.copy()
         })
         """
-        
+
         return card_obj
 
     def update_model_card(self, **kwargs) -> dict:
@@ -155,8 +168,8 @@ class MLTracer(BlockchainTracer):
             )
             self._model_card = card_obj
         else:
-            raise ValueError('No keyword arguments provided to model card.')
-        
+            raise ValueError("No keyword arguments provided to model card.")
+
         return self._blockchain_data.copy()
 
     def update_data_card(self, **kwargs) -> dict:
@@ -170,12 +183,15 @@ class MLTracer(BlockchainTracer):
 
         if kwargs:
             card_obj = self._update_card(
-                self._data_card, "data_card", self._data_card_fields, kwargs,
+                self._data_card,
+                "data_card",
+                self._data_card_fields,
+                kwargs,
             )
             self._data_card = card_obj
         else:
-            raise ValueError('No keyword arguments provided to data card.')
-        
+            raise ValueError("No keyword arguments provided to data card.")
+
         return self._blockchain_data.copy()
 
     def trace_experiment(self) -> Dict[str, Any]:
@@ -184,62 +200,65 @@ class MLTracer(BlockchainTracer):
         Returns transaction details and data hash.
         """
         if self._blockchain_data is None:
-            raise ValueError("No experiment data to write. Create or update a card first.")
+            raise ValueError(
+                "No experiment data to write. Create or update a card first."
+            )
 
         # Add to experiment history
         self._experiment_history.append(self._blockchain_data.copy())
 
         # If there are previous experiments, link them
         if len(self._experiment_history) > 1:
-            previous_tx = self._experiment_history[-2].get('transaction_hash')
+            previous_tx = self._experiment_history[-2].get("transaction_hash")
             if previous_tx:
-                self._blockchain_data['previous_transaction'] = previous_tx
+                self._blockchain_data["previous_transaction"] = previous_tx
 
         # Write to blockchain using base class method
         result = super().write_to_blockchain()
 
         # Store the transaction hash in the experiment data
-        self._blockchain_data['transaction_hash'] = result['transaction_hash']
+        self._blockchain_data["transaction_hash"] = result["transaction_hash"]
 
         return result
 
     def get_experiment(self, tx_hash: str) -> Dict[str, Any]:
         """
         Retrieve an ML experiment record by its transaction hash.
-        
+
         Args:
             tx_hash: Transaction hash of the recorded experiment
-            
+
         Returns:
             Dict containing the experiment information including blockchain data and local file data
         """
         tx_details = self.get_transaction_details(tx_hash)
-        
+
         # Extract experiment data from transaction data
-        if tx_details.get('local_data'):
+        if tx_details.get("local_data"):
             # If we have local data, use it for complete experiment info
             return {
-                'experiment_data': tx_details['transaction']['data'].get('data', {}),
-                'metadata': tx_details['transaction']['data'].get('metadata', {}),
-                'file_references': tx_details['transaction']['data'].get('file_references', {}),
-                'blockchain_info': {
-                    'transaction_hash': tx_hash,
-                    'block_number': tx_details['transaction']['block_number'],
-                    'timestamp': tx_details['transaction']['block_timestamp'],
-                    'recorder': tx_details['transaction']['from']
+                "experiment_data": tx_details["transaction"]["data"].get("data", {}),
+                "metadata": tx_details["transaction"]["data"].get("metadata", {}),
+                "file_references": tx_details["transaction"]["data"].get(
+                    "file_references", {}
+                ),
+                "blockchain_info": {
+                    "transaction_hash": tx_hash,
+                    "block_number": tx_details["transaction"]["block_number"],
+                    "timestamp": tx_details["transaction"]["block_timestamp"],
+                    "recorder": tx_details["transaction"]["from"],
                 },
-                'local_data': tx_details['local_data']
+                "local_data": tx_details["local_data"],
             }
         else:
             # If no local data, return just the blockchain data
             return {
-                'experiment_data': tx_details['transaction']['data'].get('data', {}),
-                'metadata': tx_details['transaction']['data'].get('metadata', {}),
-                'blockchain_info': {
-                    'transaction_hash': tx_hash,
-                    'block_number': tx_details['transaction']['block_number'],
-                    'timestamp': tx_details['transaction']['block_timestamp'],
-                    'recorder': tx_details['transaction']['from']
-                }
+                "experiment_data": tx_details["transaction"]["data"].get("data", {}),
+                "metadata": tx_details["transaction"]["data"].get("metadata", {}),
+                "blockchain_info": {
+                    "transaction_hash": tx_hash,
+                    "block_number": tx_details["transaction"]["block_number"],
+                    "timestamp": tx_details["transaction"]["block_timestamp"],
+                    "recorder": tx_details["transaction"]["from"],
+                },
             }
-

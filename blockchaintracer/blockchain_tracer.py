@@ -46,14 +46,12 @@ class BlockchainTracer:
                     "No private key provided. The tracer is in read-only mode.\n"
                     "For security, set the BLOCKCHAIN_PRIVATE_KEY environment variable in your shell before starting Jupyter or Python,\n"
                     "Never set your private key directly in a notebook."
-                ) # or use a .env file with python-dotenv
+                )  # or use a .env file with python-dotenv
         else:
             warnings.warn(
                 "No provider_url specified. Blockchain operations (read/write) will not be available.\n"
                 "Set the provider_url argument to connect to a blockchain node (e.g., Infura or Alchemy)."
             )
-
-
 
     def compute_hash(self, data: Any) -> str:
         """
@@ -88,9 +86,7 @@ class BlockchainTracer:
             return hashlib.sha256(serialized.encode()).hexdigest()
 
     def update_data(
-        self,
-        file_paths: Optional[Dict[str, str]] = None,
-        **kwargs
+        self, file_paths: Optional[Dict[str, str]] = None, **kwargs
     ) -> Dict[str, Any]:
         """
         Update the current data that will be written to blockchain.
@@ -103,7 +99,6 @@ class BlockchainTracer:
         Returns:
             Dict containing the current data state
         """
-        
 
         # Write all kwargs directly to the blockchain data dict
         for key, value in kwargs.items():
@@ -111,14 +106,19 @@ class BlockchainTracer:
 
         if file_paths:
             for key, path in file_paths.items():
-                self._blockchain_data['file_hashes'][key] = {
+                self._blockchain_data["file_hashes"][key] = {
                     #'path': path,
-                    'hash': self.compute_hash(path)
+                    "hash": self.compute_hash(path)
                 }
 
         return self._blockchain_data.copy()
 
-    def write_to_blockchain(self, only_write_hash = False, save_locally = False, storage_dir: str = './blockchain_storage') -> Dict[str, Any]:
+    def write_to_blockchain(
+        self,
+        only_write_hash=False,
+        save_locally=False,
+        storage_dir: str = "./blockchain_storage",
+    ) -> Dict[str, Any]:
         """
         Write the current data to the blockchain.
         Must call update_data first to set the data to write.
@@ -131,7 +131,7 @@ class BlockchainTracer:
         Returns:
             Dict containing transaction details and data hash
         """
-        if not hasattr(self, '_blockchain_data'):
+        if not hasattr(self, "_blockchain_data"):
             raise ValueError("No data to write. Call update_data first.")
 
         if not self.account:
@@ -157,11 +157,13 @@ class BlockchainTracer:
             "data": self.web3.to_hex(text=serialized_data),
             "chainId": self.web3.eth.chain_id,  # optional but recommended
         }
-        default_gas = 100000 # initial guess of gas needed
+        default_gas = 100000  # initial guess of gas needed
         try:
             tx["gas"] = self.web3.eth.estimate_gas(tx)
         except Exception as e:
-            warnings.warn(f"Gas estimation failed, using default gas = {default_gas}. Error: {e}")
+            warnings.warn(
+                f"Gas estimation failed, using default gas = {default_gas}. Error: {e}"
+            )
             tx["gas"] = default_gas
 
         try:
@@ -172,10 +174,10 @@ class BlockchainTracer:
             # Wait for transaction receipt
             tx_receipt = self.web3.eth.wait_for_transaction_receipt(tx_hash)
         except Exception as e:
-            raise RuntimeError(f"Transaction failed: {e}")   
-        
+            raise RuntimeError(f"Transaction failed: {e}")
+
         ## Store the transaction hash in the blockchain data
-        #self._blockchain_data['transaction_hash'] = tx_hash.hex()
+        # self._blockchain_data['transaction_hash'] = tx_hash.hex()
 
         # Always compute the signature
         message = encode_defunct(text=json.dumps(data_package, sort_keys=True))
@@ -191,19 +193,21 @@ class BlockchainTracer:
             "transaction_hash": tx_hash.hex(),
             "block_number": tx_receipt.blockNumber,
             "block_timestamp": self.web3.eth.get_block(
-                            tx_receipt.blockNumber
-                        ).timestamp,
+                tx_receipt.blockNumber
+            ).timestamp,
             "tx_dict_to_sign": tx,
-            "tx_receipt": tx_receipt
+            "tx_receipt": tx_receipt,
         }
 
         if save_locally:
             # Use the provided storage_dir or default to self.storage_dir
-            local_storage_dir = storage_dir if storage_dir is not None else self.storage_dir
+            local_storage_dir = (
+                storage_dir if storage_dir is not None else self.storage_dir
+            )
             os.makedirs(local_storage_dir, exist_ok=True)
             local_file_path = os.path.join(local_storage_dir, f"{data_hash}.json")
             with open(local_file_path, "w") as f:
-                json.dump(result,f)
+                json.dump(result, f)
 
         return result
 
@@ -220,13 +224,12 @@ class BlockchainTracer:
         """
         # Get blockchain transaction data
         tx = self.web3.eth.get_transaction(tx_hash)
-        receipt = self.web3.eth.get_transaction_receipt(tx_hash)
-        
+
         # Try to decode the data
         data = {}
         if tx.input and tx.input != "0x":
             try:
-                hex_data = tx.input.hex() # [2:]
+                hex_data = tx.input.hex()  # [2:]
                 decoded_data = bytes.fromhex(hex_data).decode("utf-8")
                 data = json.loads(decoded_data)
             except (UnicodeDecodeError, json.JSONDecodeError):
@@ -237,13 +240,14 @@ class BlockchainTracer:
                     data = {"raw": tx.input}
 
         ## Try to get local file data if it exists
-        #local_data = None
-        #if data.get("hash"):
+        # local_data = None
+        # if data.get("hash"):
         #    local_file_path = os.path.join(self.storage_dir, f"{data['hash']}.json")
         #    if os.path.exists(local_file_path):
         #        with open(local_file_path, "r") as f:
         #            local_data = json.load(f)
 
+        receipt = self.web3.eth.get_transaction_receipt(tx_hash)
         tx_data = {
             "transaction": {
                 "hash": tx_hash,
@@ -270,17 +274,14 @@ class BlockchainTracer:
         Return a copy of the current blockchain data being traced.
         Returns None if no data has been initialized yet.
         """
-        if hasattr(self, '_blockchain_data') and self._blockchain_data is not None:
-            return self._blockchain_data.copy()
-        return None
-
+        return self._blockchain_data.copy()
 
 
 # Ver:
 #  - reproducibility score
-# opcion: se comparte un diccionario con  el cual se evalua en la blockchain si tiene 
+# opcion: se comparte un diccionario con  el cual se evalua en la blockchain si tiene
 # la metadata correcta, para luego usarla.
-# de todas formas se [podria guardar el diccionario en la blockchain, 
+# de todas formas se [podria guardar el diccionario en la blockchain,
 # y solo compartir un hash para buscar el diccionario
 
 # each affirmation done by computation must have available code that justifies.
@@ -311,7 +312,7 @@ class BlockchainTracer:
 # datos que no se quieran publicos, se puede guardar solo el hash en blockchain, aunque no garantiza la persistencia.
 # se puede ver que hay hoy en dia en el ecosistema para resolver esto.
 
-#que agregar para rep de ML.
+# que agregar para rep de ML.
 # ver standard ONNX. guardar hash de ONNX
 # hash del codigo
 # IPFS
