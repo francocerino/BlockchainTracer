@@ -62,9 +62,9 @@ Provenance of Machine Learning Experiments](https://assets.amazon.science/2f/39/
   
  4. Fine-tune the requirements for good reproducibility.
     - The NeurIPS 2019 ML reproducibility checklist of [Improving Reproducibility in Machine Learning Research](https://www.jmlr.org/papers/volume22/20-303/20-303.pdf).
-    - JSON data structure with every configuration of the ML pipeline (hardware, environment, preprocesses, hyperparameters, seeds, metrics, package versions, etc). Also HDF5? [Traceability for Trustworthy AI: A Review of Models and Tools (2021)](https://www.mdpi.com/2504-2289/5/2/20)
+    - JSON data structure with every configuration of the ML pipeline (hardware, environment, preprocesses, hyperparameters, seeds, metrics, package versions, etc).
     - Model info sheet of [Leakage and the reproducibility crisis in machine learning-based science (2023)](https://www.cell.com/patterns/pdf/S2666-3899(23)00159-9.pdf)
-    - Standarized enviroment. Docker is always needed? [Leakage and the reproducibility crisis in machine learning-based science (2023)](https://www.cell.com/patterns/pdf/S2666-3899(23)00159-9.pdf)
+    - Standarized enviroment. [Leakage and the reproducibility crisis in machine learning-based science (2023)](https://www.cell.com/patterns/pdf/S2666-3899(23)00159-9.pdf)
     - Checklist of [reforms: Reporting Standards for Machine Learning Based Science (2023)](https://arxiv.org/pdf/2308.07832).
     - Minimal Description Profile: [Traceability for Trustworthy AI: A Review of Models and Tools (2021)](https://www.mdpi.com/2504-2289/5/2/20).
     - [Model Cards for Model Reporting](https://arxiv.org/pdf/1810.03993)
@@ -72,7 +72,6 @@ Provenance of Machine Learning Experiments](https://assets.amazon.science/2f/39/
       
       [Continue list, reading remaining items from 1.]
 
-   I have different info sheets or model cards that are needed to fill. What to do, take all the things to trace and remove the repeated things? choose one of them in particular? choose related data to one of the subjects to trace? (for example, only model parameters or narrative). think in terms of set theory. Model cards and automl are tested and  used by the community, maybe i can step on these developments. also the code that i have to automatize that i have in notes.md is a good thing to take in account.
 
  5. Give the user things needed to reproduce models.
  6. Ensure the code is easy to use and works well. 
