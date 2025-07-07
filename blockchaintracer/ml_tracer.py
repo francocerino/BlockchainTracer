@@ -9,7 +9,6 @@ import json
 
 from blockchain_tracer import BlockchainTracer
 
-# check: que tanto me sirven las clases de cards
 class MLTracer(BlockchainTracer):
     """
     A specialized blockchain tracer for ML model experiments.
@@ -37,7 +36,7 @@ class MLTracer(BlockchainTracer):
         
         # cards attributes
         self._model_card_fields = self._get_card_fields(ModelCardData)
-        self._data_card_fields = self._get_card_fields(DatasetCardData)
+        self._data_card_fields = self._get_card_fields(DatasetCardData) # check: que tanto me sirven las clases de cards
         self._model_card = None
         self._data_card = None
 
