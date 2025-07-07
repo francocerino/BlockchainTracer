@@ -9,6 +9,7 @@ import json
 
 from blockchain_tracer import BlockchainTracer
 
+
 class MLTracer(BlockchainTracer):
     """
     A specialized blockchain tracer for ML model experiments.
@@ -19,7 +20,7 @@ class MLTracer(BlockchainTracer):
     def __init__(
         self,
         provider_url: Optional[str] = None,
-        #storage_dir: str = "./ml_tracer_storage",
+        # storage_dir: str = "./ml_tracer_storage",
     ):
         """
         Initialize the MLTracer with optional blockchain provider and storage directory.
@@ -31,12 +32,14 @@ class MLTracer(BlockchainTracer):
             The private key is loaded exclusively from the BLOCKCHAIN_PRIVATE_KEY environment
             variable via the base class for security reasons.
         """
-        super().__init__(provider_url=provider_url) # , storage_dir=storage_dir)
+        super().__init__(provider_url=provider_url)  # , storage_dir=storage_dir)
         # self._experiment_history = []
-        
+
         # cards attributes
         self._model_card_fields = self._get_card_fields(ModelCardData)
-        self._data_card_fields = self._get_card_fields(DatasetCardData) # check: que tanto me sirven las clases de cards
+        self._data_card_fields = self._get_card_fields(
+            DatasetCardData
+        )  # check: que tanto me sirven las clases de cards
         self._model_card = None
         self._data_card = None
 
@@ -64,9 +67,9 @@ class MLTracer(BlockchainTracer):
         except:
             # system_info['docker'] = None
             pass
-        
+
         self._blockchain_data["system_info"] = system_info
-        
+
         return self._blockchain_data.copy()
 
     def _get_card_fields(self, card_class) -> Dict[str, Any]:
@@ -164,10 +167,7 @@ class MLTracer(BlockchainTracer):
             self._model_card = ModelCardData()
         if kwargs:
             card_obj = self._update_card(
-                self._model_card,
-                "model_card",
-                self._model_card_fields,
-                kwargs
+                self._model_card, "model_card", self._model_card_fields, kwargs
             )
             self._model_card = card_obj
         else:
@@ -204,7 +204,7 @@ class MLTracer(BlockchainTracer):
         """
 
         # # Add to experiment history
-        # self._experiment_history.append(self._blockchain_data.copy()) # check. para que? 
+        # self._experiment_history.append(self._blockchain_data.copy()) # check. para que?
         # # If there are previous experiments, link them
         # if len(self._experiment_history) > 1:
         #    previous_tx = self._experiment_history[-2].get("transaction_hash")
