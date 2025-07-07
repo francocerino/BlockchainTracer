@@ -69,9 +69,7 @@ Provenance of Machine Learning Experiments](https://assets.amazon.science/2f/39/
     - Minimal Description Profile: [Traceability for Trustworthy AI: A Review of Models and Tools (2021)](https://www.mdpi.com/2504-2289/5/2/20).
     - [Model Cards for Model Reporting](https://arxiv.org/pdf/1810.03993)
     - [MLFlow for data logging](https://mlflow.org/docs/latest/getting-started/intro-quickstart/). Has an UI to compare models logged and is coded to work with very well known models from sklearn, XGBoost, etc.
-      
-      [Continue list, reading remaining items from 1.]
-
+     
 
  5. Give the user things needed to reproduce models.
  6. Ensure the code is easy to use and works well. 
