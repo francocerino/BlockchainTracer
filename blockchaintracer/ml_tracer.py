@@ -7,7 +7,7 @@ from datetime import datetime
 from huggingface_hub import DatasetCardData, ModelCardData
 import json
 
-from blockchain_tracer import BlockchainTracer
+from blockchaintracer.blockchain_tracer import BlockchainTracer
 
 
 class MLTracer(BlockchainTracer):
