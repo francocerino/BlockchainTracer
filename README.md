@@ -5,9 +5,6 @@ Leverages the blockchain’s inherent properties —immutability, transparency, 
 
 Save sequential steps of anything.
 
-## Implementation
-
-A single multipurpose Python class.
 
 ## Multipurpose
 
@@ -17,8 +14,8 @@ A single multipurpose Python class.
  - Improve supply chain traceability.
  - Save important data of scientific studies.
  - Proof of authorship. Trace results with an address and a timestamp.
- - Any text.
- - What you want.
+ - Text.
+ - User-defined applications.
 
 ## Machine Learning traceability and reproducibility
 
@@ -91,4 +88,4 @@ Provenance of Machine Learning Experiments](https://assets.amazon.science/2f/39/
  11. Extend to private blockchains. 
  12. Display option to trace data with a new address.
  13. Expand to more RPCs (besides Infura).
- 14. Automate model info sheet completion. Use a LLM?
+ 14. Automate model info sheet completion.
