@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "blockchaintracer"
 version = "0.1.0"
-description = "A toolkit for recording provenance on the blockchain"
+description = "Python package to trace sensitive information and process flows on the blockchain."
 authors = [
     { name = "Franco Cerino", email = "francocerino@gmail.com" }
 ]
