@@ -17,6 +17,27 @@ Save sequential steps of anything.
  - Text.
  - User-defined applications.
 
+## Installation Guide 
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/francocerino/BlockchainTracer.git
+cd BlockchainTracer
+```
+
+### 2. (Recommended) Create and Activate a Virtual Environment
+```bash
+python3 -m venv blockchain_tracer_env
+source blockchain_tracer_env/bin/activate
+```
+
+### 3. Install the Package
+
+```bash
+pip install .
+```
+
 ## Machine Learning traceability and reproducibility
 
 This case has similar ideas to supply chain traceability, but in this case is traceability for a Machine Learning pipeline, where the idea also aims to improve reproducibility through the use of standards developed for ML leveraged with the transparency, persistence, and immutability characteristics that blockchain provides.
