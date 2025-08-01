@@ -6,6 +6,7 @@ from typing import Any, Dict, Optional
 from web3 import Web3
 from eth_account.messages import encode_defunct
 import warnings
+from types import MappingProxyType
 
 
 class BlockchainTracer:
@@ -111,7 +112,7 @@ class BlockchainTracer:
                     "hash": self.compute_hash(path)
                 }
 
-        return self._blockchain_data.copy()
+        return MappingProxyType(self._blockchain_data)
 
     def write_to_blockchain(
         self,
@@ -209,7 +210,7 @@ class BlockchainTracer:
             with open(local_file_path, "w") as f:
                 json.dump(result, f)
 
-        return result
+        return MappingProxyType(result)
 
     def get_transaction_details(self, tx_hash: str) -> Dict[str, Any]:
         """
@@ -267,11 +268,11 @@ class BlockchainTracer:
             },
         }
 
-        return tx_data
+        return MappingProxyType(tx_data)
 
     def get_data(self) -> dict:
         """
         Return a copy of the current blockchain data being traced.
         Returns None if no data has been initialized yet.
         """
-        return self._blockchain_data.copy()
+        return MappingProxyType(self._blockchain_data)
