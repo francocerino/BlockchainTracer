@@ -1,11 +1,11 @@
 from typing import Dict, Any, Optional
 import platform
 import importlib.metadata
+from types import MappingProxyType
 
 # import docker
 from datetime import datetime
 from huggingface_hub import DatasetCardData, ModelCardData
-import json
 
 from blockchaintracer.blockchain_tracer import BlockchainTracer
 
@@ -43,6 +43,34 @@ class MLTracer(BlockchainTracer):
         self._model_card = None
         self._data_card = None
 
+    @property
+    def get_model_card(self) -> Optional[ModelCardData]:
+        """
+        Get the current Hugging Face ModelCardData object for this experiment.
+        """
+        return MappingProxyType(self._model_card) # antes usaba '.copy()'
+
+    @property
+    def get_data_card(self) -> Optional[DatasetCardData]:
+        """
+        Get the current Hugging Face DatasetCardData object for this experiment.
+        """
+        return MappingProxyType(self._data_card)
+
+    @property
+    def model_card_fields(self) -> Dict[str, str]:
+        """
+        Get all available model card fields and their descriptions.
+        """
+        return MappingProxyType(self._model_card_fields)
+
+    @property
+    def data_card_fields(self) -> Dict[str, str]:
+        """
+        Get all available data card fields and their descriptions.
+        """
+        return MappingProxyType(self._data_card_fields)
+
     def update_system_info(self) -> Dict[str, Any]:
         """
         Collect system information: OS, Python version, and all installed package versions.
@@ -70,7 +98,7 @@ class MLTracer(BlockchainTracer):
 
         self._blockchain_data["system_info"] = system_info
 
-        return self._blockchain_data.copy()
+        return MappingProxyType(self._blockchain_data)
 
     def _get_card_fields(self, card_class) -> Dict[str, Any]:
         """
@@ -100,34 +128,6 @@ class MLTracer(BlockchainTracer):
                 fields[attr_name] = description
 
         return fields
-
-    @property
-    def get_model_card(self) -> Optional[ModelCardData]:
-        """
-        Get the current Hugging Face ModelCardData object for this experiment.
-        """
-        return self._model_card
-
-    @property
-    def get_data_card(self) -> Optional[DatasetCardData]:
-        """
-        Get the current Hugging Face DatasetCardData object for this experiment.
-        """
-        return self._data_card
-
-    @property
-    def model_card_fields(self) -> Dict[str, str]:
-        """
-        Get all available model card fields and their descriptions.
-        """
-        return self._model_card_fields
-
-    @property
-    def data_card_fields(self) -> Dict[str, str]:
-        """
-        Get all available data card fields and their descriptions.
-        """
-        return self._data_card_fields
 
     def _update_card(self, card_obj, card_type, card_fields, kwargs):
         """
@@ -173,7 +173,7 @@ class MLTracer(BlockchainTracer):
         else:
             raise ValueError("No keyword arguments provided to update model card.")
 
-        return self._blockchain_data.copy()
+        return MappingProxyType(self._blockchain_data)
 
     def update_data_card(self, **kwargs) -> dict:
         """
@@ -195,7 +195,7 @@ class MLTracer(BlockchainTracer):
         else:
             raise ValueError("No keyword arguments provided to update data card.")
 
-        return self._blockchain_data.copy()
+        return MappingProxyType(self._blockchain_data)
 
     def write_to_blockchain(self) -> Dict[str, Any]:
         """
