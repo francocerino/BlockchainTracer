@@ -8,6 +8,13 @@ from eth_account.messages import encode_defunct
 import warnings
 from types import MappingProxyType
 
+try:
+    import ipfshttpclient
+    IPFS_AVAILABLE = True
+except ImportError:
+    IPFS_AVAILABLE = False
+    warnings.warn("ipfshttpclient not available.")
+
 
 class BlockchainTracer:
     """
@@ -276,3 +283,99 @@ class BlockchainTracer:
         Returns None if no data has been initialized yet.
         """
         return MappingProxyType(self._blockchain_data)
+
+    def write_file_to_ipfs(self, file_path: str, ipfs_client_url: str = "/ip4/127.0.0.1/tcp/5001") -> Dict[str, Any]:
+        """
+        Save a file to IPFS and get the associated hash.
+    
+        This method uploads a file to IPFS and returns the IPFS hash (CID) along with metadata.
+        The IPFS hash can be used to retrieve the file from any IPFS node.
+        
+        Args:
+            file_path: Path to the file to upload to IPFS
+            ipfs_client_url: IPFS daemon URL (default: local IPFS daemon)
+            
+        Returns:
+            Dict containing IPFS hash (CID), file size, and metadata
+            
+        Raises:
+            FileNotFoundError: If the file doesn't exist
+            ConnectionError: If IPFS daemon is not accessible
+            ImportError: If ipfshttpclient is not installed
+        """
+        if not IPFS_AVAILABLE:
+            raise ImportError("ipfshttpclient is required for IPFS functionality. Install it with: pip install ipfshttpclient")
+        
+        if not os.path.exists(file_path):
+            raise FileNotFoundError(f"File not found: {file_path}")
+        
+        if not os.path.isfile(file_path):
+            raise ValueError(f"Path is not a file: {file_path}")
+        
+        try:
+            # Connect to IPFS daemon
+            with ipfshttpclient.connect(ipfs_client_url) as client:
+                # Add file to IPFS
+                result = client.add(file_path)
+                
+                # Get file info
+                file_info = {
+                    "ipfs_hash": result["Hash"],  # This is the CID (Content Identifier)
+                    "file_name": result.get("Name", os.path.basename(file_path)),
+                    "file_size": result.get("Size", os.path.getsize(file_path)),
+                    "file_path": file_path,
+                    "ipfs_url": f"ipfs://{result['Hash']}",
+                    "gateway_url": f"https://ipfs.io/ipfs/{result['Hash']}",
+                    "timestamp": int(time.time())
+                }
+                
+                # Also compute local hash for verification
+                file_info["local_hash"] = self.compute_hash(file_path)
+                
+                return MappingProxyType(file_info)
+                
+        except Exception as e:
+            raise ConnectionError(f"Failed to connect to IPFS daemon at {ipfs_client_url}. Error: {e}")
+    
+    def get_ipfs_file(self, ipfs_hash: str, output_path: Optional[str] = None, 
+                     ipfs_client_url: str = "/ip4/127.0.0.1/tcp/5001") -> Dict[str, Any]:
+        """
+        Retrieve a file from IPFS using its hash (CID).
+        
+        Args:
+            ipfs_hash: IPFS hash (CID) of the file to retrieve
+            output_path: Optional path to save the retrieved file. If None, returns file content as bytes
+            ipfs_client_url: IPFS daemon URL (default: local IPFS daemon)
+            
+        Returns:
+            Dict containing file information and content/path
+        """
+        if not IPFS_AVAILABLE:
+            raise ImportError("ipfshttpclient is required for IPFS functionality. Install it with: pip install ipfshttpclient")
+        
+        try:
+            with ipfshttpclient.connect(ipfs_client_url) as client:
+                if output_path:
+                    # Download file to specified path
+                    client.get(ipfs_hash, output_path)
+                    file_info = {
+                        "ipfs_hash": ipfs_hash,
+                        "output_path": output_path,
+                        "status": "downloaded",
+                        "timestamp": int(time.time())
+                    }
+                else:
+                    # Get file content as bytes
+                    file_content = client.cat(ipfs_hash)
+                    file_info = {
+                        "ipfs_hash": ipfs_hash,
+                        "content": file_content,
+                        "content_size": len(file_content),
+                        "status": "retrieved",
+                        "timestamp": int(time.time())
+                    }
+                
+                return MappingProxyType(file_info)
+                
+        except Exception as e:
+            raise ConnectionError(f"Failed to retrieve file from IPFS. Error: {e}")

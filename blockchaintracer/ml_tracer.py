@@ -1,6 +1,7 @@
 from typing import Dict, Any, Optional
 import platform
 import importlib.metadata
+import time
 from types import MappingProxyType
 
 # import docker
@@ -229,3 +230,4 @@ class MLTracer(BlockchainTracer):
         tx_data = super().get_transaction_details(tx_hash)
 
         return tx_data
+
