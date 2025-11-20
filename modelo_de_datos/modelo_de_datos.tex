@@ -1,0 +1,58 @@
+% /Users/fcerino/Documents/projects/BlockchainTracer/modelo_de_datos/modelo_de_datos.tex
+\documentclass[a4paper,11pt]{article}
+
+% --- Encoding / language ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+
+% --- Page layout ---
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+
+% --- Graphics, diagrams, tables ---
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{longtable}
+
+% --- Code listings ---
+\usepackage{listings}
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    language=SQL
+}
+
+% --- Maths / units ---
+\usepackage{amsmath,amssymb}
+\usepackage{siunitx}
+
+% --- Hyperlinks / bibliography ---
+\usepackage[hidelinks]{hyperref}
+\usepackage[backend=biber,style=ieee]{biblatex}
+\addbibresource{bibliography.bib} % create bibliography.bib if needed
+
+% --- Micro-typography ---
+\usepackage{microtype}
+
+% --- Document metadata ---
+\title{Modelo de Datos \\ \large Proyecto MLTracer}
+\author{Franco Cerino}
+
+\begin{document}
+\maketitle
+
+
+
+El modelo de datos utilizado se basa en dos clases principales: MLTracer y BlockchainTracer. La clase MLTracer se encarga de gestionar la metadata relacionada con los experimentos de machine learning, incluyendo información sobre los modelos, datasets y métricas de rendimiento. Por otro lado, la clase BlockchainTracer se ocupa de la interacción con la blockchain, permitiendo que los datos generados por MLTracer sean almacenados de manera segura y verificable.
+
+Todos los metadatos se guardan en un archivo JSON, que se utiliza para estructurar y almacenar la información de manera organizada. Este JSON se puede almacenar en la blockchain, garantizando la inmutabilidad y la trazabilidad de los datos. En caso de que los datos sean demasiado grandes para ser almacenados directamente en la blockchain, se utiliza IPFS (InterPlanetary File System) para almacenar los datos de forma eficiente y descentralizada, asegurando que la metadata siga siendo accesible. Luego, el hash de IPFS se guarda en la blockchain, proporcionando un enlace seguro a los datos almacenados.
+
+Además, la implementación de la clase BlockchainTracer permite la interacción con cualquier EVM (Ethereum Virtual Machine), lo que proporciona flexibilidad y compatibilidad con diferentes redes blockchain. Esto facilita la integración de la solución en diversos entornos y aplicaciones, promoviendo la reproducibilidad y la transparencia en los experimentos de machine learning.
+
+\end{document}
