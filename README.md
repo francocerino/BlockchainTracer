@@ -38,6 +38,7 @@ source blockchain_tracer_env/bin/activate
 pip install .
 ```
 ## Frontend
+Run this command in your consele:
 
 ```bash
 npx shadcn@latest add "https://v0.app/chat/b/b_g1kTbNDXhik?token=eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..LPIK7itf1p9wLa7I.F6HOGYSmZvQniRTrCUZMAWm8yRrZP-Yg2F7XY82pPVOJOM3thdiHDJsjuh4.FnnualxaLhk_c6dTlGTWuQ"
